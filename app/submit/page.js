@@ -12,6 +12,12 @@ export default function SubmitOpinion() {
     studentName: '',
     studentClass: '',
   });
+  const [formErrors, setFormErrors] = useState({
+    topic: '',
+    content: '',
+    studentName: '',
+    studentClass: '',
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(null);
@@ -22,12 +28,77 @@ export default function SubmitOpinion() {
       ...prev,
       [name]: value
     }));
+    
+    // 입력 시 해당 필드 오류 초기화
+    setFormErrors(prev => ({
+      ...prev,
+      [name]: ''
+    }));
+  };
+
+  // 폼 유효성 검사 함수
+  const validateForm = () => {
+    let isValid = true;
+    const errors = {
+      topic: '',
+      content: '',
+      studentName: '',
+      studentClass: '',
+    };
+    
+    // 토론 주제 검증
+    if (!formData.topic.trim()) {
+      errors.topic = '토론 주제를 입력해주세요.';
+      isValid = false;
+    } else if (formData.topic.length > 100) {
+      errors.topic = '토론 주제는 100자 이내로 입력해주세요.';
+      isValid = false;
+    }
+    
+    // 의견 내용 검증
+    if (!formData.content.trim()) {
+      errors.content = '의견 내용을 입력해주세요.';
+      isValid = false;
+    } else if (formData.content.length > 5000) {
+      errors.content = '의견은 5000자 이내로 입력해주세요.';
+      isValid = false;
+    } else if (formData.content.length < 10) {
+      errors.content = '의견은 최소 10자 이상 입력해주세요.';
+      isValid = false;
+    }
+    
+    // 학생 이름 검증
+    if (!formData.studentName.trim()) {
+      errors.studentName = '이름을 입력해주세요.';
+      isValid = false;
+    } else if (formData.studentName.length > 50) {
+      errors.studentName = '이름은 50자 이내로 입력해주세요.';
+      isValid = false;
+    }
+    
+    // 학급 정보 검증
+    if (!formData.studentClass.trim()) {
+      errors.studentClass = '학급 정보를 입력해주세요.';
+      isValid = false;
+    } else if (formData.studentClass.length > 50) {
+      errors.studentClass = '학급 정보는 50자 이내로 입력해주세요.';
+      isValid = false;
+    }
+    
+    setFormErrors(errors);
+    return isValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     setError('');
+    
+    // 폼 유효성 검사
+    if (!validateForm()) {
+      return;
+    }
+    
+    setIsLoading(true);
     
     try {
       const response = await fetch('/api/opinions', {
@@ -108,10 +179,11 @@ export default function SubmitOpinion() {
                 name="topic"
                 value={formData.topic}
                 onChange={handleChange}
-                className={styles.input}
+                className={formErrors.topic ? `${styles.input} ${styles.inputError}` : styles.input}
                 placeholder="예: 초등학교에서 휴대폰 사용을 허용해야 할까요?"
                 required
               />
+              {formErrors.topic && <p className={styles.errorText}>{formErrors.topic}</p>}
             </div>
 
             <div className={styles.formGroup}>
@@ -121,11 +193,12 @@ export default function SubmitOpinion() {
                 name="content"
                 value={formData.content}
                 onChange={handleChange}
-                className={styles.textarea}
+                className={formErrors.content ? `${styles.textarea} ${styles.inputError}` : styles.textarea}
                 placeholder="자신의 의견을 자유롭게 작성해주세요..."
                 rows="6"
                 required
               ></textarea>
+              {formErrors.content && <p className={styles.errorText}>{formErrors.content}</p>}
             </div>
 
             <div className={styles.formRow}>
@@ -137,10 +210,11 @@ export default function SubmitOpinion() {
                   name="studentName"
                   value={formData.studentName}
                   onChange={handleChange}
-                  className={styles.input}
+                  className={formErrors.studentName ? `${styles.input} ${styles.inputError}` : styles.input}
                   placeholder="홍길동"
                   required
                 />
+                {formErrors.studentName && <p className={styles.errorText}>{formErrors.studentName}</p>}
               </div>
 
               <div className={styles.formGroup}>
@@ -151,10 +225,11 @@ export default function SubmitOpinion() {
                   name="studentClass"
                   value={formData.studentClass}
                   onChange={handleChange}
-                  className={styles.input}
+                  className={formErrors.studentClass ? `${styles.input} ${styles.inputError}` : styles.input}
                   placeholder="5학년 2반"
                   required
                 />
+                {formErrors.studentClass && <p className={styles.errorText}>{formErrors.studentClass}</p>}
               </div>
             </div>
 

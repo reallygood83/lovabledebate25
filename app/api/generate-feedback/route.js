@@ -2,8 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from 'next/server';
 
 // Gemini 클라이언트 초기화 (환경 변수 사용)
-// 환경 변수가 로드되지 않는 문제가 있어 API 키를 직접 설정합니다
-const API_KEY = "AIzaSyARRqhuICxrAl917lhbk2OatZdsEgRpXxM"; // .env.local에서 확인한 API 키
+const API_KEY = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 /**
@@ -47,7 +46,7 @@ export async function POST(request) {
   if (!API_KEY) {
     console.error("Gemini API Key is not set.");
     // NextResponse를 사용하여 JSON 응답 및 상태 코드 반환
-    return NextResponse.json({ message: '서버 설정 오류: API 키가 설정되지 않았습니다.' }, { status: 500 });
+    return NextResponse.json({ message: '서버 설정 오류: API 키가 설정되지 않았습니다. 환경 변수 GEMINI_API_KEY를 설정해주세요.' }, { status: 500 });
   }
 
   try {
@@ -77,7 +76,6 @@ export async function POST(request) {
   } catch (error) {
     console.error('Gemini API 호출 또는 요청 처리 오류:', error);
     // 실패 응답
-    // error.message 에 더 구체적인 오류 내용이 있을 수 있음
     return NextResponse.json({ message: '피드백 생성 중 오류 발생', error: error.message || 'Unknown error' }, { status: 500 });
   }
 }

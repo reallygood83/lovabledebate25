@@ -1,0 +1,246 @@
+.container {
+  padding: 2rem;
+  background-color: #f8f9fa;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #0066cc;
+  margin: 0;
+}
+
+.description {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0;
+}
+
+.logoutButton {
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  color: #666;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.logoutButton:hover {
+  background-color: #f0f0f0;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.statsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.statCard {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.statCard h3 {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0 0 0.5rem 0;
+  font-weight: 500;
+}
+
+.statNumber {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #0066cc;
+  margin: 0;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.button {
+  padding: 1rem 1.5rem;
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-align: center;
+  text-decoration: none;
+}
+
+.button:hover {
+  background-color: #0052a3;
+}
+
+.secondaryButton {
+  padding: 1rem 1.5rem;
+  background-color: white;
+  color: #0066cc;
+  border: 1px solid #0066cc;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+  text-decoration: none;
+}
+
+.secondaryButton:hover {
+  background-color: #f0f7ff;
+}
+
+.recentOpinions {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0 0 1.5rem 0;
+  font-weight: 600;
+}
+
+.loading, .error, .emptyState {
+  padding: 2rem;
+  text-align: center;
+  color: #666;
+}
+
+.error {
+  color: #ff4d4f;
+}
+
+.opinionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.opinionCard {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: box-shadow 0.3s;
+}
+
+.opinionCard:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.opinionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.opinionHeader h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin: 0;
+  font-weight: 600;
+}
+
+.badge {
+  padding: 0.3rem 0.6rem;
+  background-color: #f0f0f0;
+  color: #666;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.opinionMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.opinionPreview {
+  color: #444;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.reviewButton {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #f0f7ff;
+  color: #0066cc;
+  border: 1px solid #d4e8ff;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.reviewButton:hover {
+  background-color: #dfedff;
+}
+
+.viewMore {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.viewMoreButton {
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  color: #0066cc;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.viewMoreButton:hover {
+  color: #0052a3;
+  text-decoration: underline;
+}
+
+.footer {
+  margin-top: 3rem;
+  padding: 1rem 0;
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+} 

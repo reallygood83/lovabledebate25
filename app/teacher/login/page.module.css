@@ -1,0 +1,142 @@
+.container {
+  min-height: 100vh;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #0066cc;
+}
+
+.description {
+  font-size: 1.1rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.main {
+  width: 100%;
+  max-width: 500px;
+}
+
+.loginCard {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  padding: 2rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+}
+
+.input {
+  padding: 0.8rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.input:focus {
+  border-color: #0066cc;
+  outline: none;
+}
+
+.error {
+  background-color: #fff2f0;
+  border: 1px solid #ffccc7;
+  padding: 0.8rem;
+  border-radius: 4px;
+  color: #ff4d4f;
+  font-size: 0.9rem;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.button {
+  padding: 0.8rem 1.5rem;
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-align: center;
+  display: block;
+  width: 100%;
+}
+
+.button:hover {
+  background-color: #0052a3;
+}
+
+.button:disabled {
+  background-color: #99caff;
+  cursor: not-allowed;
+}
+
+.secondaryButton {
+  padding: 0.8rem 1.5rem;
+  background-color: transparent;
+  color: #0066cc;
+  border: 1px solid #0066cc;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+  display: block;
+  width: 100%;
+  text-decoration: none;
+}
+
+.secondaryButton:hover {
+  background-color: #f0f7ff;
+}
+
+.footer {
+  margin-top: 3rem;
+  padding: 1rem 0;
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+} 
