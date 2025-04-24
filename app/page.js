@@ -1,19 +1,35 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 
 export default function Home() {
+  const router = useRouter();
+  const [activeSection, setActiveSection] = useState(null);
   const [loginData, setLoginData] = useState({
     studentName: '',
     accessCode: ''
   });
+  const [teacherData, setTeacherData] = useState({
+    username: '',
+    password: ''
+  });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e) => {
+  const handleStudentChange = (e) => {
     const { name, value } = e.target;
     setLoginData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setError('');
+  };
+
+  const handleTeacherChange = (e) => {
+    const { name, value } = e.target;
+    setTeacherData(prev => ({
       ...prev,
       [name]: value
     }));
@@ -77,92 +93,205 @@ export default function Home() {
       });
   };
 
+  const handleTeacherLogin = (e) => {
+    e.preventDefault();
+    setError('');
+    
+    if (!teacherData.username.trim() || !teacherData.password.trim()) {
+      setError('아이디와 비밀번호를 모두 입력해주세요.');
+      return;
+    }
+    
+    setIsLoading(true);
+
+    // 임시 인증 - 실제로는 API 호출 필요
+    // 임시 계정: teacher / password123
+    if (teacherData.username === 'teacher' && teacherData.password === 'password123') {
+      // 세션 정보 저장
+      localStorage.setItem('teacherAuth', 'true');
+      router.push('/teacher/dashboard');
+    } else {
+      setError('아이디 또는 비밀번호가 올바르지 않습니다.');
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>경기초등토론교육모형 AI 피드백 시스템</h1>
-        <p className={styles.description}>
-          초등학생 토론 의견에 대한 맞춤형 피드백을 AI를 통해 자동으로 생성합니다.
-        </p>
+    <div className={styles.mainContainer}>
+      <header className={styles.mainHeader}>
+        <h1 className={styles.mainTitle}>토론 튜티</h1>
+        <nav className={styles.mainNav}>
+          <ul>
+            <li><a href="#" className={styles.active}>홈</a></li>
+            <li><a href="#">토론 주제</a></li>
+            <li><a href="#">시나리오</a></li>
+            <li><a href="#">토론 진행</a></li>
+            <li><a href="#">피드백 관리</a></li>
+            <li><a href="#">토론 자료</a></li>
+            <li><a href="#">소개</a></li>
+          </ul>
+        </nav>
       </header>
 
-      <main className={styles.main}>
-        <div className={styles.grid}>
-          <div className={styles.card}>
-            <h2>학생 영역</h2>
-            <p>토론 의견을 제출하거나 선생님의 피드백을 확인하세요.</p>
-            
-            <div className={styles.buttonContainer}>
-              <Link href="/submit" className={styles.button}>
-                토론 의견 제출하기
-              </Link>
-              <Link href="/examples" className={styles.secondaryButton}>
-                좋은 예시 보기
-              </Link>
-            </div>
-            
-            <div className={styles.checkFeedback}>
-              <h3>피드백 확인하기</h3>
-              <p>이름과 고유번호를 입력하여 선생님의 피드백을 확인하세요.</p>
-              
-              <form onSubmit={handleStudentLogin} className={styles.codeForm}>
-                <input
-                  type="text"
-                  name="studentName"
-                  value={loginData.studentName}
-                  onChange={handleChange}
-                  placeholder="이름"
-                  className={error ? `${styles.input} ${styles.inputError}` : styles.input}
-                  disabled={isLoading}
-                />
-                <input
-                  type="password"
-                  name="accessCode"
-                  value={loginData.accessCode}
-                  onChange={handleChange}
-                  placeholder="고유번호"
-                  className={error ? `${styles.input} ${styles.inputError}` : styles.input}
-                  disabled={isLoading}
-                />
-                <button 
-                  type="submit" 
-                  className={styles.button}
-                  disabled={isLoading}
-                >
-                  {isLoading ? '로그인 중...' : '로그인'}
-                </button>
-              </form>
-              
-              {error && <p className={styles.error}>{error}</p>}
-            </div>
-          </div>
+      <main className={styles.mainContent}>
+        <div className={styles.heroSection}>
+          <h1 className={styles.heroTitle}>AI 기반 토론 교육 피드백 시스템</h1>
+          <p className={styles.heroText}>
+            '다름과 공존하는 경기초등토론교육모형'에 기반하여 토론 수업을 효과적으로 준비하고 진행할 수 있도록 도와주는 AI 토론 가이드입니다.
+          </p>
           
-          <div className={styles.card}>
-            <h2>교사 영역</h2>
-            <p>학생 의견을 검토하고 AI 피드백을 생성하세요.</p>
-            
-            <div className={styles.buttonContainer}>
-              <Link href="/teacher" className={styles.button}>
-                교사용 페이지 접속
-              </Link>
-            </div>
-            
-            <div className={styles.info}>
-              <h3>시스템 소개</h3>
-              <p>
-                이 시스템은 경기초등토론교육모형을 기반으로 학생들의 토론 의견에 대한 맞춤형 피드백을 생성합니다.
-                학생들은 자신의 의견을 제출하고, 교사는 Google의 Gemini AI를 활용하여 자동으로 피드백을 생성할 수 있습니다.
-              </p>
-              <p>
-                학생들은 교사가 발급한 이름과 고유번호로 로그인하여 자신의 피드백을 확인할 수 있으며, 교사가 특별히 선정한 우수 사례는 모든 학생들에게 공개됩니다.
-              </p>
-            </div>
+          <div className={styles.buttonGroup}>
+            <button 
+              className={styles.primaryButton}
+              onClick={() => setActiveSection('student')}
+            >
+              학생으로 접속하기
+            </button>
+            <button 
+              className={styles.secondaryButton}
+              onClick={() => setActiveSection('teacher')}
+            >
+              교사로 접속하기
+            </button>
           </div>
         </div>
+
+        {activeSection === 'student' && (
+          <div className={styles.accessSection}>
+            <h2>학생 접속</h2>
+            <div className={styles.studentOptions}>
+              <div className={styles.optionCard}>
+                <h3>토론 의견 제출하기</h3>
+                <p>토론에 대한 내 의견을 작성하고 제출합니다.</p>
+                <Link href="/submit" className={styles.optionButton}>
+                  의견 제출하기
+                </Link>
+              </div>
+              
+              <div className={styles.optionCard}>
+                <h3>좋은 예시 보기</h3>
+                <p>다른 학생들의 우수한 토론 의견을 살펴봅니다.</p>
+                <Link href="/examples" className={styles.optionButton}>
+                  예시 보기
+                </Link>
+              </div>
+              
+              <div className={styles.optionCard}>
+                <h3>피드백 확인하기</h3>
+                <p>내 의견에 대한 선생님의 피드백을 확인합니다.</p>
+                <form onSubmit={handleStudentLogin} className={styles.loginForm}>
+                  <input
+                    type="text"
+                    name="studentName"
+                    value={loginData.studentName}
+                    onChange={handleStudentChange}
+                    placeholder="이름"
+                    className={error ? `${styles.formInput} ${styles.inputError}` : styles.formInput}
+                    disabled={isLoading}
+                  />
+                  <input
+                    type="password"
+                    name="accessCode"
+                    value={loginData.accessCode}
+                    onChange={handleStudentChange}
+                    placeholder="고유번호"
+                    className={error ? `${styles.formInput} ${styles.inputError}` : styles.formInput}
+                    disabled={isLoading}
+                  />
+                  <button 
+                    type="submit" 
+                    className={styles.formButton}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? '로그인 중...' : '로그인'}
+                  </button>
+                </form>
+                {error && <p className={styles.errorText}>{error}</p>}
+              </div>
+            </div>
+            
+            <button 
+              className={styles.backButton}
+              onClick={() => setActiveSection(null)}
+            >
+              뒤로 가기
+            </button>
+          </div>
+        )}
+
+        {activeSection === 'teacher' && (
+          <div className={styles.accessSection}>
+            <h2>교사 접속</h2>
+            <div className={styles.teacherAccess}>
+              <div className={styles.loginCard}>
+                <h3>교사 로그인</h3>
+                <p>교사 계정으로 로그인하여 대시보드에 접속합니다.</p>
+                <form onSubmit={handleTeacherLogin} className={styles.loginForm}>
+                  <input
+                    type="text"
+                    name="username"
+                    value={teacherData.username}
+                    onChange={handleTeacherChange}
+                    placeholder="교사 아이디"
+                    className={styles.formInput}
+                    required
+                  />
+                  <input
+                    type="password"
+                    name="password"
+                    value={teacherData.password}
+                    onChange={handleTeacherChange}
+                    placeholder="비밀번호"
+                    className={styles.formInput}
+                    required
+                  />
+                  {error && <p className={styles.errorText}>{error}</p>}
+                  <button 
+                    type="submit" 
+                    className={styles.formButton}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? '로그인 중...' : '대시보드 접속하기'}
+                  </button>
+                </form>
+              </div>
+            </div>
+            
+            <button 
+              className={styles.backButton}
+              onClick={() => setActiveSection(null)}
+            >
+              뒤로 가기
+            </button>
+          </div>
+        )}
+
+        {!activeSection && (
+          <div className={styles.featuresSection}>
+            <h2>주요 기능</h2>
+            <div className={styles.featuresList}>
+              <div className={styles.featureItem}>
+                <div className={styles.featureIcon}>🔍</div>
+                <h3>토론 주제 탐색</h3>
+                <p>다양한 수준의 토론 주제를 제공합니다.</p>
+              </div>
+              <div className={styles.featureItem}>
+                <div className={styles.featureIcon}>💡</div>
+                <h3>맞춤형 피드백</h3>
+                <p>AI가 학생 의견에 맞춤형 피드백을 제공합니다.</p>
+              </div>
+              <div className={styles.featureItem}>
+                <div className={styles.featureIcon}>📊</div>
+                <h3>토론 관리</h3>
+                <p>토론 진행 상황을 쉽게 관리할 수 있습니다.</p>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
 
-      <footer className={styles.footer}>
-        <p>경기초등토론교육모형 AI 피드백 시스템 &copy; {new Date().getFullYear()}</p>
+      <footer className={styles.mainFooter}>
+        <p>AI 기반 토론 교육 피드백 시스템 &copy; 2025 안양 박달초 김문정</p>
       </footer>
     </div>
   );

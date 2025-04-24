@@ -1,184 +1,528 @@
-.container {
+/* 메인 컨테이너 스타일 */
+.mainContainer {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding: 0 1rem;
+}
+
+/* 헤더 스타일 */
+.mainHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #2563eb;
+  color: white;
+}
+
+.mainTitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.mainNav ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 1.5rem;
+}
+
+.mainNav a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0.5rem 0;
+  position: relative;
+}
+
+.mainNav a.active::after,
+.mainNav a:hover::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: white;
+}
+
+/* 메인 컨텐츠 스타일 */
+.mainContent {
+  flex: 1;
+  padding: 0;
+}
+
+/* 히어로 섹션 스타일 */
+.heroSection {
+  background-color: #eef2ff;
+  padding: 4rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroTitle {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #2563eb;
+  margin-bottom: 1.5rem;
+}
+
+.heroText {
+  font-size: 1.1rem;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+  color: #4b5563;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.primaryButton, 
+.secondaryButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.primaryButton {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+}
+
+.primaryButton:hover {
+  background-color: #1d4ed8;
+}
+
+.secondaryButton {
+  background-color: white;
+  color: #2563eb;
+  border: 1px solid #2563eb;
+}
+
+.secondaryButton:hover {
+  background-color: #eef2ff;
+}
+
+/* 접속 섹션 스타일 */
+.accessSection {
+  padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.header {
+.accessSection h2 {
   text-align: center;
-  padding: 2rem 0;
+  margin-bottom: 2rem;
+  color: #1f2937;
+}
+
+/* 학생 옵션 카드 스타일 */
+.studentOptions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.optionCard {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  transition: transform 0.2s;
+}
+
+.optionCard:hover {
+  transform: translateY(-5px);
+}
+
+.optionCard h3 {
+  color: #2563eb;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.optionButton {
+  display: inline-block;
+  background-color: #2563eb;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  text-decoration: none;
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+.optionButton:hover {
+  background-color: #1d4ed8;
+}
+
+/* 교사 접속 스타일 */
+.teacherAccess {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.loginCard {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 2rem;
+}
+
+.loginCard h3 {
+  color: #2563eb;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.formInput {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+}
+
+.formInput:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+.inputError {
+  border-color: #ef4444;
+}
+
+.formButton {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.formButton:hover {
+  background-color: #1d4ed8;
+}
+
+.formButton:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+.errorText {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.backButton {
+  display: block;
+  margin: 2rem auto 0;
+  background-color: transparent;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+.backButton:hover {
+  color: #1f2937;
+  text-decoration: underline;
+}
+
+/* 기능 섹션 스타일 */
+.featuresSection {
+  padding: 4rem 2rem;
+  background-color: white;
+}
+
+.featuresSection h2 {
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #1f2937;
+}
+
+.featuresList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.featureItem {
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.featureIcon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.featureItem h3 {
+  color: #2563eb;
+  margin-bottom: 0.75rem;
+}
+
+.featureItem p {
+  color: #6b7280;
+}
+
+/* 푸터 스타일 */
+.mainFooter {
+  background-color: #f3f4f6;
+  padding: 1.5rem;
+  text-align: center;
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .mainHeader {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  
+  .mainNav {
+    margin-top: 1rem;
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  .mainNav ul {
+    width: max-content;
+  }
+  
+  .heroTitle {
+    font-size: 2rem;
+  }
+  
+  .buttonGroup {
+    flex-direction: column;
+  }
+}
+
+/* 기존의 CSS 클래스는 그대로 유지 (삭제하지 않음) */
+.container {
+  padding: 0 1rem;
+}
+
+.header {
+  padding: 4rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .title {
+  margin: 0 0 1rem;
+  line-height: 1.15;
   font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
   color: #333;
 }
 
 .description {
-  font-size: 1.1rem;
+  line-height: 1.5;
+  font-size: 1.25rem;
   color: #666;
   max-width: 800px;
   margin: 0 auto;
 }
 
 .main {
+  min-height: 80vh;
+  padding: 2rem 0;
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 1rem 0;
-  width: 100%;
-  margin: 0 auto;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1200px;
   gap: 2rem;
-  margin: 2rem 0;
+  width: 100%;
+  margin-top: 2rem;
 }
 
 .card {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  transition: transform 0.3s, box-shadow 0.3s;
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  transition: transform 0.15s ease;
 }
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .card h2 {
+  margin: 0 0 1rem 0;
   font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
   color: #333;
-}
-
-.card h3 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin: 1.5rem 0 0.75rem;
-  color: #444;
-}
-
-.card p {
-  color: #666;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
 }
 
 .buttonContainer {
   display: flex;
   gap: 1rem;
   margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.button, .secondaryButton {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-weight: 500;
+  text-decoration: none;
+  text-align: center;
+  transition: background-color 0.3s ease;
 }
 
 .button {
   background-color: #0070f3;
   color: white;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
 }
 
 .button:hover {
-  background-color: #0051a9;
-}
-
-.button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+  background-color: #0051cc;
 }
 
 .secondaryButton {
-  background-color: transparent;
-  color: #0070f3;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border: 1px solid #0070f3;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.3s;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
+  background-color: #f0f0f0;
+  color: #333;
 }
 
 .secondaryButton:hover {
-  background-color: #f0f8ff;
-}
-
-.error {
-  color: #e53e3e;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
+  background-color: #e0e0e0;
 }
 
 .checkFeedback {
-  background: #f7fafc;
-  padding: 1.5rem;
-  border-radius: 6px;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eaeaea;
+}
+
+.checkFeedback h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  color: #333;
 }
 
 .codeForm {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .input {
-  flex: 1;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   font-size: 1rem;
-  transition: border-color 0.3s;
 }
 
 .input:focus {
   outline: none;
   border-color: #0070f3;
-  box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.2);
+}
+
+.inputError {
+  border-color: #ff0000;
+}
+
+.error {
+  color: #ff0000;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
 }
 
 .info {
-  background: #f0f9ff;
-  padding: 1.5rem;
-  border-radius: 6px;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eaeaea;
+}
+
+.info h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  color: #333;
 }
 
 .info p {
+  margin: 0.5rem 0;
+  color: #666;
   font-size: 0.95rem;
-  margin-bottom: 0.75rem;
+  line-height: 1.5;
 }
 
 .footer {
-  text-align: center;
+  width: 100%;
   padding: 2rem 0;
   border-top: 1px solid #eaeaea;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fafafa;
+}
+
+.footer p {
   color: #666;
 }
 
 @media (max-width: 768px) {
   .grid {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .card {
+    width: 100%;
+  }
+  
+  .buttonContainer {
+    flex-direction: column;
+  }
+  
+  .button, .secondaryButton {
+    width: 100%;
   }
 }
