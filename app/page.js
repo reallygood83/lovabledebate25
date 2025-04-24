@@ -116,6 +116,11 @@ export default function Home() {
     }
   };
 
+  // 교사로 접속하기 핸들러 함수
+  const handleTeacherAccess = () => {
+    router.push('/teacher/login'); // 바로 교사 로그인 페이지로 이동
+  };
+
   return (
     <div className={styles.mainContainer}>
       <header className={styles.mainHeader}>
@@ -149,7 +154,7 @@ export default function Home() {
             </button>
             <button 
               className={styles.secondaryButton}
-              onClick={() => setActiveSection('teacher')}
+              onClick={handleTeacherAccess}
             >
               교사로 접속하기
             </button>
