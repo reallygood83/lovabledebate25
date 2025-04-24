@@ -1,3 +1,234 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.header {
+  padding: 24px 0;
+  margin-bottom: 20px;
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.description {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.backButton {
+  display: inline-block;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.backButton:hover {
+  background-color: #e5e7eb;
+}
+
+.main {
+  padding-bottom: 40px;
+}
+
+.twoColumn {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.leftColumn, .rightColumn {
+  flex: 1;
+  min-width: 300px;
+}
+
+.card {
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.cardHeader {
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.cardBody {
+  padding: 16px;
+}
+
+.infoItem {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.infoLabel {
+  flex: 0 0 100px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.infoValue {
+  color: #111827;
+}
+
+.topicText, .opinionText {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.textareaLabel {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-family: inherit;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.textarea:focus {
+  border-color: #4f46e5;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
+.teacherNoteTextarea {
+  min-height: 80px;
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.checkbox {
+  margin-right: 10px;
+}
+
+.checkboxLabel {
+  color: #4b5563;
+  font-size: 14px;
+}
+
+.successMessage {
+  background-color: #ecfdf5;
+  color: #065f46;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border: 1px solid #a7f3d0;
+}
+
+.generatedFeedbackContainer {
+  margin-top: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #f9fafb;
+}
+
+.generatedTitle {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.generatedFeedback {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.generatedFeedback p {
+  margin: 0 0 12px;
+  line-height: 1.6;
+}
+
+.generatedFeedback p:last-child {
+  margin-bottom: 0;
+}
+
+.loading, .error, .notFound {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.error, .notFound {
+  color: #dc2626;
+}
+
+.error h2, .notFound h2 {
+  margin-bottom: 12px;
+}
+
+.button {
+  display: inline-block;
+  background-color: #4f46e5;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-top: 16px;
+}
+
+.button:hover {
+  background-color: #4338ca;
+}
+
+.footer {
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 40px;
+  color: #6b7280;
+  font-size: 14px;
+  border-top: 1px solid #e5e7eb;
+}
+
 .headerButtons {
   display: flex;
   gap: 8px;
