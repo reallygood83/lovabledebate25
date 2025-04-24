@@ -137,7 +137,7 @@ export default function Home() {
         <div className={styles.heroSection}>
           <h1 className={styles.heroTitle}>AI 기반 토론 교육 피드백 시스템</h1>
           <p className={styles.heroText}>
-            '다름과 공존하는 경기초등토론교육모형'에 기반하여 토론 수업을 효과적으로 준비하고 진행할 수 있도록 도와주는 AI 토론 가이드입니다.
+            &lsquo;다름과 공존하는 경기초등토론교육모형&rsquo;에 기반하여 토론 수업을 효과적으로 준비하고 진행할 수 있도록 도와주는 AI 토론 가이드입니다.
           </p>
           
           <div className={styles.buttonGroup}>
