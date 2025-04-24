@@ -1,0 +1,42 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm ci --only=production",
+  "cleanUrls": true,
+  "excludeFiles": [
+    "README.md",
+    ".git/**",
+    ".github/**",
+    "**/*.test.js",
+    "**/*.spec.js",
+    "**/*.d.ts",
+    "**/__tests__/**",
+    "**/__mocks__/**",
+    "node_modules/@next/swc-*/**",
+    "node_modules/typescript/**",
+    "node_modules/eslint/**",
+    "node_modules/@img/sharp-libvips-*/**",
+    "node_modules/react-icons/!(fa|md|hi|bs)/**"
+  ],
+  "functions": {
+    "app/api/*/route.js": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
+  "env": {
+    "NEXT_PUBLIC_DEPLOYMENT_ENV": "production"
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "headers": {
+        "cache-control": "s-maxage=0"
+      }
+    },
+    {
+      "handle": "filesystem"
+    }
+  ]
+} 
