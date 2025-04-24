@@ -13,15 +13,15 @@
   "env": {
     "NEXT_PUBLIC_DEPLOYMENT_ENV": "production"
   },
-  "routes": [
+  "headers": [
     {
-      "src": "/api/(.*)",
-      "headers": {
-        "cache-control": "s-maxage=0"
-      }
-    },
-    {
-      "handle": "filesystem"
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "cache-control",
+          "value": "s-maxage=0"
+        }
+      ]
     }
   ]
 } 
