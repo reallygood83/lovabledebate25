@@ -2,7 +2,65 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import styles from './page.module.css';
+import styles from './styles.module.css';
+import clsx from "clsx";
+import Spinner from "@/components/Spinner";
+import FeedbackCriteriaModal from "./components/FeedbackModal";
+import axios from "axios";
+import StudentInfoBox from "./components/StudentInfoBox";
+import { FaChevronDown, FaChevronUp, FaLightbulb, FaClipboard, FaMagic } from "react-icons/fa";
+
+// 템플릿 선택 컴포넌트
+const TemplateSelection = ({ setFeedback, currentFeedback }) => {
+  const templates = [
+    {
+      title: '긍정적 피드백',
+      content: '이 생각은 매우 흥미롭습니다. 특히 [장점]에 대한 부분이 인상적이었습니다. 더 깊이 탐구해 보시면 어떨까요?'
+    },
+    {
+      title: '개선 제안',
+      content: '의견이 잘 전달되었습니다. 다만 [개선점]에 대해 더 구체적인 예시를 들면 주장이 더 설득력을 가질 것 같습니다.'
+    },
+    {
+      title: '근거 요청',
+      content: '흥미로운 관점입니다. 이 주장을 뒷받침할 수 있는 구체적인 근거나 자료를 추가하면 더욱 설득력 있는 의견이 될 것입니다.'
+    },
+    {
+      title: '질문 제시',
+      content: '좋은 의견입니다. 추가로 생각해볼 질문은: [질문]입니다. 이 부분에 대해 어떻게 생각하시나요?'
+    }
+  ];
+
+  const handleApplyTemplate = (template) => {
+    if (currentFeedback) {
+      setFeedback(`${currentFeedback}\n\n${template}`);
+    } else {
+      setFeedback(template);
+    }
+  };
+
+  return (
+    <div className={styles.feedbackTip}>
+      <h4 className={styles.tipTitle}>피드백 템플릿</h4>
+      <ul className={styles.templateList}>
+        {templates.map((template, index) => (
+          <li key={index} className={styles.templateItem}>
+            <div className={styles.templateHeader}>
+              <span className={styles.templateTitle}>{template.title}</span>
+              <button
+                onClick={() => handleApplyTemplate(template.content)}
+                className={styles.applyButton}
+              >
+                적용
+              </button>
+            </div>
+            <p className={styles.templateContent}>{template.content}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 export default function ReviewOpinion() {
   const router = useRouter();
@@ -19,6 +77,11 @@ export default function ReviewOpinion() {
   const [successMessage, setSuccessMessage] = useState('');
   const [generatedFeedback, setGeneratedFeedback] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState('custom');
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [feedbackTips, setFeedbackTips] = useState([]);
+  const [showTips, setShowTips] = useState(false);
+  const [isTemplateVisible, setIsTemplateVisible] = useState(false);
 
   // 인증 확인
   useEffect(() => {
@@ -64,34 +127,72 @@ export default function ReviewOpinion() {
   }, [id]);
 
   // AI 피드백 생성
-  const handleGenerateFeedback = async () => {
-    if (!opinion) return;
-    
+  const handleGenerateFeedback = async (type) => {
     try {
-      setIsGenerating(true);
-      setError('');
+      setIsLoading(true);
+      setSelectedTemplate(type);
+
+      const apiEndpoint = '/api/generate-feedback';
       
-      const response = await fetch('/api/generate-feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          discussionTopic: opinion.topic,
-          studentOpinion: opinion.content
-        })
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || '피드백 생성에 실패했습니다.');
+      if (!opinion) {
+        alert('의견 데이터를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+        return;
       }
+
+      // 피드백 팁 가져오기
+      await fetchFeedbackTips();
+
+      // 상세 지침 작성
+      let instructions = '';
       
-      setGeneratedFeedback(data.feedback || '');
-    } catch (err) {
-      setError(`피드백 생성 오류: ${err.message}`);
+      // 선택한 템플릿 타입에 따라 다른 지침 제공
+      switch (type) {
+        case 'detailed':
+          instructions = "상세하고 구체적인 피드백을 제공해주세요. 학생의 논리적 사고, 근거 제시, 창의성을 균형있게 평가해야 합니다.";
+          break;
+        case 'simple':
+          instructions = "간결하고 핵심적인 피드백을 2-3문장으로 요약해주세요.";
+          break;
+        case 'encouraging':
+          instructions = "격려와 긍정적인 측면을 강조하는 피드백을 작성해주세요. 학생의 자신감을 높이는 데 중점을 두세요.";
+          break;
+        case 'improvement':
+          instructions = "개선이 필요한 부분에 초점을 맞춘 건설적인 피드백을 제공해주세요. 구체적인 개선 방향도 제시해주세요.";
+          break;
+        default:
+          instructions = "균형 잡힌 피드백을 제공해주세요.";
+      }
+
+      const response = await fetch(apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          opinion: opinion.content,
+          topic: opinion.topic,
+          instructions: instructions
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('피드백 생성에 실패했습니다.');
+      }
+
+      const data = await response.json();
+      setGeneratedFeedback(data.feedback);
+    } catch (error) {
+      console.error('피드백 생성 오류:', error);
+      alert('피드백 생성 중 오류가 발생했습니다.');
     } finally {
-      setIsGenerating(false);
+      setIsLoading(false);
     }
+  };
+
+  // 템플릿 선택 핸들러
+  const handleTemplateSelect = (template) => {
+    setSelectedTemplate(template);
+    handleGenerateFeedback(template);
   };
 
   // 생성된 피드백 적용
@@ -135,6 +236,63 @@ export default function ReviewOpinion() {
       setError(`저장 오류: ${err.message}`);
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  // 피드백 팁 가져오기 함수
+  const fetchFeedbackTips = async () => {
+    try {
+      setShowTips(true);
+      
+      if (!opinion) {
+        return;
+      }
+      
+      const response = await fetch('/api/generate-feedback/tips', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          topic: opinion.topic,
+          opinion: opinion.content
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('피드백 팁 가져오기 실패');
+      }
+
+      const data = await response.json();
+      setFeedbackTips(data.tips || getDefaultTips());
+    } catch (error) {
+      console.error('피드백 팁 오류:', error);
+      setFeedbackTips(getDefaultTips());
+    }
+  };
+
+  // 기본 피드백 팁 제공
+  const getDefaultTips = () => {
+    return [
+      '학생의 관점을 존중하는 표현을 사용하세요.',
+      '구체적인 개선점과 함께 실행 가능한 제안을 제시하세요.',
+      '긍정적인 측면과 개선이 필요한 부분을 균형있게 언급하세요.',
+      '논리적 사고와 비판적 분석 능력에 대해 코멘트하세요.',
+      '참고할 수 있는 추가 자료나 예시를 제공하면 더 효과적입니다.'
+    ];
+  };
+
+  // 템플릿 토글 핸들러 추가
+  const handleTemplateToggle = () => {
+    setIsTemplateVisible(!isTemplateVisible);
+  };
+
+  // 피드백 팁 적용 핸들러
+  const handleApplyTip = (tip) => {
+    if (feedback) {
+      setFeedback(`${feedback}\n\n${tip}`);
+    } else {
+      setFeedback(tip);
     }
   };
 
@@ -266,16 +424,56 @@ export default function ReviewOpinion() {
                 <div className={styles.card}>
                   <div className={styles.cardHeader}>
                     <h2 className={styles.cardTitle}>피드백 생성</h2>
+                    <div className={styles.headerButtons}>
+                      <button 
+                        onClick={handleTemplateToggle} 
+                        className={styles.expandButton}
+                      >
+                        <FaClipboard className="mr-1" />
+                        {isTemplateVisible ? '템플릿 닫기' : '템플릿 보기'}
+                      </button>
+                      <button
+                        onClick={fetchFeedbackTips}
+                        className={styles.tipButton}
+                        disabled={isGenerating}
+                      >
+                        <FaLightbulb className="mr-1" />
+                        {feedbackTips.length > 0 ? '새 피드백 팁' : '피드백 팁'}
+                      </button>
+                    </div>
                   </div>
                   <div className={styles.cardBody}>
-                    <div className={styles.feedbackTip}>
-                      <p className={styles.tipTitle}>피드백 작성 팁:</p>
-                      <ul className={styles.tipList}>
-                        <li className={styles.tipItem}>구체적인 칭찬과 개선점을 포함하세요.</li>
-                        <li className={styles.tipItem}>논리적 구조와 주장의 타당성을 평가하세요.</li>
-                        <li className={styles.tipItem}>발전 방향을 제시하고 격려하세요.</li>
-                      </ul>
-                    </div>
+                    {isTemplateVisible && (
+                      <TemplateSelection 
+                        setFeedback={setFeedback}
+                        currentFeedback={feedback}
+                      />
+                    )}
+
+                    {feedbackTips.length > 0 && (
+                      <div className={styles.suggestedTips}>
+                        <div className={styles.suggestedHeader}>
+                          <p className={styles.suggestedTitle}>이 의견에 대한 맞춤 피드백 제안:</p>
+                          <span className={styles.tipCount}>{feedbackTips.length}개 제안</span>
+                        </div>
+                        <ul className={styles.tipCards}>
+                          {feedbackTips.map((tip, index) => (
+                            <li key={index} className={styles.tipCard}>
+                              <div className={styles.tipCardContent}>
+                                <span className={styles.tipNumber}>{index + 1}</span>
+                                <p>{tip}</p>
+                              </div>
+                              <button 
+                                className={styles.applyTipButton}
+                                onClick={() => handleApplyTip(tip)}
+                              >
+                                적용
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
 
                     <label htmlFor="feedback" className={styles.textareaLabel}>
                       피드백 내용
@@ -314,10 +512,11 @@ export default function ReviewOpinion() {
 
                     <div className={styles.buttonsContainer}>
                       <button
-                        onClick={handleGenerateFeedback}
+                        onClick={() => handleGenerateFeedback('standard')}
                         disabled={isGenerating}
                         className={styles.generateButton}
                       >
+                        <FaMagic className="mr-2" />
                         {isGenerating ? "생성 중..." : "AI 피드백 생성"}
                       </button>
                       
@@ -331,17 +530,20 @@ export default function ReviewOpinion() {
                     </div>
 
                     {generatedFeedback && (
-                      <>
+                      <div className={styles.generatedFeedbackContainer}>
+                        <h3 className={styles.generatedTitle}>AI 생성 피드백:</h3>
                         <div className={styles.generatedFeedback}>
-                          {generatedFeedback}
+                          {generatedFeedback.split('\n').map((paragraph, index) => (
+                            <p key={index}>{paragraph}</p>
+                          ))}
                         </div>
                         <button
                           onClick={handleApplyGeneratedFeedback}
                           className={styles.applyButton}
                         >
-                          생성된 피드백 적용
+                          이 피드백 적용하기
                         </button>
-                      </>
+                      </div>
                     )}
                   </div>
                 </div>

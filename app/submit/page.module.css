@@ -173,4 +173,182 @@
   padding: 2rem 0;
   border-top: 1px solid #eaeaea;
   color: #666;
+}
+
+.labelContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.labelActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.charCount {
+  font-size: 0.875rem;
+  color: #666;
+  margin-right: 8px;
+}
+
+.inputWithSuggestions {
+  position: relative;
+}
+
+.suggestionsList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.suggestionItem {
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.suggestionItem:hover {
+  background-color: #f5f9ff;
+}
+
+.suggestedTopicsToggle {
+  font-size: 0.875rem;
+  color: #0070f3;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.tipButton, .aiButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  font-weight: 500;
+}
+
+.tipButton {
+  background-color: #eef2ff;
+  color: #4f46e5;
+}
+
+.tipButton:hover {
+  background-color: #e0e7ff;
+}
+
+.aiButton {
+  background-color: #f0f9ff;
+  color: #0284c7;
+}
+
+.aiButton:hover {
+  background-color: #e0f2fe;
+}
+
+.tipButton:disabled, .aiButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tipPanel {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.tipsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tipCard {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tipCard:hover {
+  border-color: #a5b4fc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.selectedTip {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
+.tipTitle {
+  font-size: 0.975rem;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #111827;
+}
+
+.tipContent {
+  font-size: 0.875rem;
+  margin: 0;
+  color: #4b5563;
+}
+
+.applyTipButton {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.applyTipButton:hover {
+  background-color: #4338ca;
+}
+
+.iconLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.inputIcon {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.errorText {
+  color: #e53e3e;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.inputError {
+  border-color: #e53e3e;
 } 

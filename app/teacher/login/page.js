@@ -1,17 +1,44 @@
 'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './page.module.css';
 
-export default function TeacherLogin() {
+// SearchParams를 사용하는 컴포넌트를 분리합니다
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // URL 파라미터에서 에러 메시지 확인
+  useEffect(() => {
+    const errorParam = searchParams.get('error');
+    if (errorParam) {
+      let errorMessage = '로그인 처리 중 오류가 발생했습니다.';
+      
+      switch(errorParam) {
+        case 'invalid_state':
+          errorMessage = '보안 검증에 실패했습니다. 다시 시도해주세요.';
+          break;
+        case 'token_error':
+          errorMessage = '인증 토큰을 가져오는데 실패했습니다.';
+          break;
+        case 'profile_error':
+          errorMessage = '프로필 정보를 가져오는데 실패했습니다.';
+          break;
+        default:
+          errorMessage = `오류: ${errorParam}`;
+      }
+      
+      setError(errorMessage);
+    }
+  }, [searchParams]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,21 +46,46 @@ export default function TeacherLogin() {
       ...prev,
       [name]: value
     }));
+    setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
     
-    // 임시 인증 - 실제로는 API 호출 필요
-    // 임시 계정: teacher / password123
-    if (formData.username === 'teacher' && formData.password === 'password123') {
-      // 세션 정보 저장 (실제로는 서버 측 인증 필요)
-      localStorage.setItem('teacherAuth', 'true');
-      router.push('/teacher/dashboard');
-    } else {
-      setError('아이디 또는 비밀번호가 올바르지 않습니다.');
+    try {
+      const response = await fetch('/api/teacher/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || '로그인에 실패했습니다.');
+      }
+      
+      // 로그인 성공 시 교사 정보 세션 스토리지에 저장
+      if (data.success) {
+        sessionStorage.setItem('teacherInfo', JSON.stringify(data.teacher));
+        router.push('/teacher/dashboard');
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleNaverLogin = () => {
+    router.push('/api/auth/naver');
   };
 
   return (
@@ -49,15 +101,15 @@ export default function TeacherLogin() {
         <div className={styles.loginCard}>
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.formGroup}>
-              <label htmlFor="username" className={styles.label}>아이디</label>
+              <label htmlFor="email" className={styles.label}>이메일</label>
               <input
-                type="text"
-                id="username"
-                name="username"
-                value={formData.username}
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
                 onChange={handleChange}
                 className={styles.input}
-                placeholder="교사 아이디"
+                placeholder="이메일 주소"
                 required
               />
             </div>
@@ -90,9 +142,23 @@ export default function TeacherLogin() {
               >
                 {isLoading ? '로그인 중...' : '로그인'}
               </button>
-              <Link href="/" className={styles.secondaryButton}>
-                홈으로 돌아가기
-              </Link>
+              
+              <button 
+                type="button" 
+                onClick={handleNaverLogin}
+                className={styles.naverButton}
+              >
+                네이버 아이디로 로그인
+              </button>
+              
+              <div className={styles.linkContainer}>
+                <Link href="/teacher/register" className={styles.link}>
+                  계정이 없으신가요? 회원가입
+                </Link>
+                <Link href="/" className={styles.link}>
+                  홈으로 돌아가기
+                </Link>
+              </div>
             </div>
           </form>
         </div>
@@ -102,5 +168,14 @@ export default function TeacherLogin() {
         <p>경기초등토론교육모형 AI 피드백 시스템 &copy; {new Date().getFullYear()}</p>
       </footer>
     </div>
+  );
+}
+
+// 메인 페이지 컴포넌트에서는 Suspense로 감싸서 내보냅니다
+export default function TeacherLogin() {
+  return (
+    <Suspense fallback={<div>로딩 중...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 } 

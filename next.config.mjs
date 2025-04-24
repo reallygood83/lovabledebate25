@@ -4,7 +4,7 @@ const nextConfig = {
   serverRuntimeConfig: {
     // 런타임에 필요한 환경 변수를 확인합니다.
     onInit: () => {
-      const requiredEnvVars = ['MONGODB_URI', 'GEMINI_API_KEY'];
+      const requiredEnvVars = ['MONGODB_URI', 'GEMINI_API_KEY', 'NAVER_CLIENT_ID', 'NAVER_CLIENT_SECRET', 'NAVER_CALLBACK_URL'];
       const missingEnvVars = requiredEnvVars.filter(
         (envVar) => !process.env[envVar]
       );
@@ -18,6 +18,26 @@ const nextConfig = {
         }
       }
     }
+  },
+  // 빌드 최적화 설정
+  output: 'standalone',
+  // 경로 관련 문제 해결을 위한 설정
+  distDir: 'build',
+  
+  // 환경 변수 설정
+  // 참고: 아래 환경 변수들은 개발 환경에서만 사용하고
+  // 프로덕션 환경에서는 Vercel 대시보드에서 설정해야 합니다.
+  // env: {
+  //   NAVER_CLIENT_ID: '...',
+  //   NAVER_CLIENT_SECRET: '...',
+  //   NAVER_CALLBACK_URL: 'https://your-domain.vercel.app/api/auth/naver/callback'
+  // },
+  
+  // Next.js 15.3.1에 맞게 업데이트된 설정
+  // 실험적 기능 대신 루트 레벨 설정 사용
+  serverExternalPackages: ['bcrypt'],
+  outputFileTracingIncludes: {
+    '/**/*': ['./node_modules/**/*']
   }
 };
 
