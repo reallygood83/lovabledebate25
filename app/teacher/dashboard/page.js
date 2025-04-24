@@ -103,9 +103,9 @@ export default function TeacherDashboard() {
           <Link href="/teacher/students" className={styles.button}>
             학생 계정 관리
           </Link>
-          <Link href="/teacher/topics" className={styles.button}>
-            토론 주제 관리
-          </Link>
+          <div className={`${styles.button} ${styles.disabled}`}>
+            토론 주제 관리 (준비중)
+          </div>
         </div>
 
         <div className={styles.recentOpinions}>

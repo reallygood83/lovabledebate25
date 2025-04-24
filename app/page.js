@@ -124,16 +124,11 @@ export default function Home() {
   return (
     <div className={styles.mainContainer}>
       <header className={styles.mainHeader}>
-        <h1 className={styles.mainTitle}>토론 튜티</h1>
+        <h1 className={styles.mainTitle}>토론 튜터</h1>
         <nav className={styles.mainNav}>
           <ul>
-            <li><a href="#" className={styles.active}>홈</a></li>
-            <li><a href="#">토론 주제</a></li>
-            <li><a href="#">시나리오</a></li>
-            <li><a href="#">토론 진행</a></li>
-            <li><a href="#">피드백 관리</a></li>
-            <li><a href="#">토론 자료</a></li>
-            <li><a href="#">소개</a></li>
+            <li><a href="https://lovabledebate25.vercel.app/" className={styles.active}>홈</a></li>
+            <li><a href="https://debate25.vercel.app/" target="_blank" rel="noopener noreferrer">토론 수업 지원 도구 이동</a></li>
           </ul>
         </nav>
       </header>

@@ -12,36 +12,32 @@ export default function PendingOpinions() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // 로그인 확인 (로컬 스토리지에서 교사 토큰 확인)
-    const token = localStorage.getItem("teacherToken");
-    if (!token) {
+    // 로그인 확인 (로컬 스토리지에서 교사 인증 상태 확인)
+    const auth = localStorage.getItem("teacherAuth") === "true";
+    setIsAuthenticated(auth);
+    
+    if (!auth) {
       router.push("/teacher/login");
       return;
     }
 
     fetchOpinions();
-  }, [currentPage]);
+  }, [currentPage, router]);
 
   const fetchOpinions = async () => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `/api/opinions/all?page=${currentPage}&limit=10&status=pending`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("teacherToken")}`,
-          },
-        }
-      );
+      const response = await fetch(`/api/opinions?status=pending&page=${currentPage}&limit=10`);
 
       if (!response.ok) {
         throw new Error("의견 데이터를 불러오는데 실패했습니다");
       }
 
       const data = await response.json();
-      setOpinions(data.opinions);
+      setOpinions(data.data || []);
       setTotalPages(data.totalPages || 1);
     } catch (err) {
       setError(err.message);
@@ -60,6 +56,10 @@ export default function PendingOpinions() {
     const options = { year: "numeric", month: "2-digit", day: "2-digit" };
     return new Date(dateString).toLocaleDateString("ko-KR", options);
   };
+
+  if (!isAuthenticated) {
+    return null; // 인증되지 않은 경우 아무것도 렌더링하지 않음
+  }
 
   return (
     <div className={styles.container}>
@@ -116,24 +116,22 @@ export default function PendingOpinions() {
               <div className={styles.tableCell}>검토</div>
             </div>
             {opinions.map((opinion) => (
-              <div key={opinion.id} className={styles.tableRow}>
+              <div key={opinion._id} className={styles.tableRow}>
                 <div className={styles.tableCell}>
                   <div>
-                    <div className={styles.studentName}>{opinion.student.name}</div>
-                    <div className={styles.studentClass}>
-                      {opinion.student.grade}학년 {opinion.student.class}반
-                    </div>
+                    <div className={styles.studentName}>{opinion.studentName}</div>
+                    <div className={styles.studentClass}>{opinion.studentClass}</div>
                   </div>
                 </div>
                 <div className={styles.tableCell}>
-                  <div className={styles.opinionTopic}>{opinion.discussion.title}</div>
+                  <div className={styles.opinionTopic}>{opinion.topic}</div>
                 </div>
                 <div className={styles.tableCell}>
-                  <div className={styles.date}>{formatDate(opinion.createdAt)}</div>
+                  <div className={styles.date}>{formatDate(opinion.submittedAt)}</div>
                 </div>
                 <div className={styles.tableCell}>
                   <Link
-                    href={`/teacher/opinions/review/${opinion.id}`}
+                    href={`/teacher/opinions/review/${opinion._id}`}
                     className={styles.reviewButton}
                   >
                     검토하기
@@ -178,7 +176,7 @@ export default function PendingOpinions() {
       </main>
 
       <footer className={styles.footer}>
-        <p>© 2023 학교 토론 피드백 시스템</p>
+        <p>경기초등토론교육모형 AI 피드백 시스템 &copy; {new Date().getFullYear()}</p>
       </footer>
     </div>
   );
