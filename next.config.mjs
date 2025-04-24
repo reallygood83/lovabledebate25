@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  distDir: 'build',  // 빌드 출력 디렉토리 지정
   // 서버 측 환경 변수 검증
   serverRuntimeConfig: {
     // 런타임에 필요한 환경 변수를 확인합니다.
