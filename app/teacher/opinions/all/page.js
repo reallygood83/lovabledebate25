@@ -16,35 +16,59 @@ export default function AllOpinions() {
   
   // 인증 확인
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('teacherAuth') === 'true';
-    if (!isAuthenticated) {
+    const teacherInfo = localStorage.getItem('teacherInfo');
+    
+    if (!teacherInfo) {
+      console.log('교사 정보가 없어 로그인 페이지로 이동합니다.');
+      router.push('/teacher/login');
+      return;
+    }
+    
+    try {
+      // 교사 정보가 유효한 JSON인지 확인
+      const teacherData = JSON.parse(teacherInfo);
+      if (!teacherData || !teacherData.id) {
+        console.log('유효하지 않은 교사 정보:', teacherData);
+        localStorage.removeItem('teacherInfo');
+        router.push('/teacher/login');
+        return;
+      }
+      
+      // 의견 목록 가져오기
+      fetchOpinions();
+    } catch (error) {
+      console.error('교사 정보 파싱 오류:', error);
+      localStorage.removeItem('teacherInfo');
       router.push('/teacher/login');
     }
   }, [router]);
 
-  // 의견 목록 가져오기
-  useEffect(() => {
-    const fetchOpinions = async () => {
-      try {
-        setIsLoading(true);
-        // 모든 의견 가져오기 API 엔드포인트 필요
-        const response = await fetch(`/api/opinions/all?page=${currentPage}&limit=10`);
-        const data = await response.json();
+  // 의견 목록 가져오기 함수
+  const fetchOpinions = async () => {
+    try {
+      setIsLoading(true);
+      // 모든 의견 가져오기 API 엔드포인트 필요
+      const response = await fetch(`/api/opinions/all?page=${currentPage}&limit=10`);
+      const data = await response.json();
 
-        if (!response.ok) {
-          throw new Error(data.message || '의견을 불러오는데 실패했습니다.');
-        }
-
-        setOpinions(data.data || []);
-        setTotalPages(data.pagination?.pages || 1);
-      } catch (err) {
-        setError(err.message || '오류가 발생했습니다.');
-      } finally {
-        setIsLoading(false);
+      if (!response.ok) {
+        throw new Error(data.message || '의견을 불러오는데 실패했습니다.');
       }
-    };
 
-    fetchOpinions();
+      setOpinions(data.data || []);
+      setTotalPages(data.pagination?.pages || 1);
+    } catch (err) {
+      setError(err.message || '오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 페이지 변경 시 의견 다시 가져오기
+  useEffect(() => {
+    if (localStorage.getItem('teacherInfo')) {
+      fetchOpinions();
+    }
   }, [currentPage]);
 
   // 의견 삭제 처리 함수

@@ -15,16 +15,32 @@ export default function PendingOpinions() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // 로그인 확인 (로컬 스토리지에서 교사 인증 상태 확인)
-    const auth = localStorage.getItem("teacherAuth") === "true";
-    setIsAuthenticated(auth);
+    // 로그인 확인 (로컬 스토리지에서 교사 정보 확인)
+    const teacherInfo = localStorage.getItem("teacherInfo");
     
-    if (!auth) {
+    if (!teacherInfo) {
+      console.log('교사 정보가 없어 로그인 페이지로 이동합니다.');
       router.push("/teacher/login");
       return;
     }
-
-    fetchOpinions();
+    
+    try {
+      // 교사 정보가 유효한 JSON인지 확인
+      const teacherData = JSON.parse(teacherInfo);
+      if (!teacherData || !teacherData.id) {
+        console.log('유효하지 않은 교사 정보:', teacherData);
+        localStorage.removeItem('teacherInfo');
+        router.push("/teacher/login");
+        return;
+      }
+      
+      setIsAuthenticated(true);
+      fetchOpinions();
+    } catch (error) {
+      console.error('교사 정보 파싱 오류:', error);
+      localStorage.removeItem('teacherInfo');
+      router.push("/teacher/login");
+    }
   }, [currentPage, router]);
 
   const fetchOpinions = async () => {

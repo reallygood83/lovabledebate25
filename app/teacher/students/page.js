@@ -20,8 +20,29 @@ export default function StudentManagement() {
 
   // 인증 확인
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('teacherAuth') === 'true';
-    if (!isAuthenticated) {
+    const teacherInfo = localStorage.getItem('teacherInfo');
+    
+    if (!teacherInfo) {
+      console.log('교사 정보가 없어 로그인 페이지로 이동합니다.');
+      router.push('/teacher/login');
+      return;
+    }
+    
+    try {
+      // 교사 정보가 유효한 JSON인지 확인
+      const teacherData = JSON.parse(teacherInfo);
+      if (!teacherData || !teacherData.id) {
+        console.log('유효하지 않은 교사 정보:', teacherData);
+        localStorage.removeItem('teacherInfo');
+        router.push('/teacher/login');
+        return;
+      }
+      
+      // 학생 목록 가져오기
+      fetchStudents();
+    } catch (error) {
+      console.error('교사 정보 파싱 오류:', error);
+      localStorage.removeItem('teacherInfo');
       router.push('/teacher/login');
     }
   }, [router]);
