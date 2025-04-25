@@ -16,8 +16,9 @@ function LoginContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // URL 파라미터에서 에러 메시지 확인
+  // URL 파라미터와 로컬 스토리지에서 데이터 가져오기
   useEffect(() => {
+    // URL에서 에러 파라미터 확인
     const errorParam = searchParams.get('error');
     if (errorParam) {
       let errorMessage = '로그인 처리 중 오류가 발생했습니다.';
@@ -38,6 +39,17 @@ function LoginContent() {
       
       setError(errorMessage);
     }
+    
+    // 회원가입에서 넘어온 경우 이메일 자동 입력
+    const lastRegisteredEmail = localStorage.getItem('lastRegisteredEmail');
+    if (lastRegisteredEmail) {
+      setFormData(prev => ({
+        ...prev,
+        email: lastRegisteredEmail
+      }));
+      // 사용 후 삭제
+      localStorage.removeItem('lastRegisteredEmail');
+    }
   }, [searchParams]);
 
   const handleChange = (e) => {
@@ -55,29 +67,50 @@ function LoginContent() {
     setIsLoading(true);
     
     try {
+      // 이메일 정규화 (소문자 변환 및 공백 제거)
+      const normalizedEmail = formData.email.toLowerCase().trim();
+
       const response = await fetch('/api/teacher/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: formData.email,
+          email: normalizedEmail,
           password: formData.password,
         }),
       });
       
       const data = await response.json();
       
+      // 응답 내용 디버깅 (개발 목적)
+      console.log('로그인 응답:', data);
+      
       if (!response.ok) {
         throw new Error(data.message || '로그인에 실패했습니다.');
       }
       
-      // 로그인 성공 시 교사 정보 세션 스토리지에 저장
+      // 로그인 성공 시 교사 정보 저장
       if (data.success) {
-        sessionStorage.setItem('teacherInfo', JSON.stringify(data.teacher));
+        // 데이터가 유효한지 확인
+        if (!data.teacher || !data.teacher.id) {
+          throw new Error('서버에서 올바른 사용자 정보를 받지 못했습니다.');
+        }
+        
+        // 세션 스토리지 대신 로컬 스토리지 사용 (페이지 새로고침 시에도 유지)
+        localStorage.setItem('teacherInfo', JSON.stringify(data.teacher));
+        
+        // 디버깅 정보 (개발 목적)
+        console.log('로그인 정보 저장 성공:', data.teacher);
+        
+        // 리디렉션
         router.push('/teacher/dashboard');
+      } else {
+        // success가 false인 경우도 처리
+        throw new Error(data.message || '로그인에 실패했습니다.');
       }
     } catch (err) {
+      console.error('로그인 오류:', err);
       setError(err.message);
     } finally {
       setIsLoading(false);
@@ -85,7 +118,9 @@ function LoginContent() {
   };
 
   const handleNaverLogin = () => {
-    router.push('/api/auth/naver');
+    console.log('네이버 로그인 시도...');
+    // 네이버 로그인 API 경로로 리다이렉트
+    window.location.href = '/api/auth/naver';
   };
 
   return (

@@ -18,11 +18,14 @@ export async function POST(request) {
       );
     }
     
+    // 이메일 소문자 변환 (DB에서는 lowercase: true 옵션으로 저장됨)
+    const normalizedEmail = email.toLowerCase().trim();
+    
     // 교사 모델 가져오기
     const TeacherModel = await getTeacherModel();
     
     // 이메일로 교사 찾기
-    const teacher = await TeacherModel.findOne({ email });
+    const teacher = await TeacherModel.findOne({ email: normalizedEmail });
     if (!teacher) {
       return NextResponse.json(
         { success: false, message: '이메일 또는 비밀번호가 올바르지 않습니다.' },
@@ -53,7 +56,7 @@ export async function POST(request) {
         success: true,
         message: '로그인 성공',
         teacher: {
-          id: teacher._id,
+          id: teacher._id.toString(), // ObjectId를 문자열로 변환
           name: teacher.name,
           email: teacher.email,
         },

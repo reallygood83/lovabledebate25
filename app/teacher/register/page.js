@@ -66,19 +66,25 @@ export default function TeacherRegister() {
     setIsLoading(true);
     
     try {
+      // 이메일 정규화 (소문자 변환 및 공백 제거)
+      const normalizedEmail = formData.email.toLowerCase().trim();
+      
       const response = await fetch('/api/teacher/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
+          name: formData.name.trim(),
+          email: normalizedEmail,
           password: formData.password,
         }),
       });
       
       const data = await response.json();
+      
+      // 응답 확인용 디버깅
+      console.log('회원가입 응답:', data);
       
       if (!response.ok) {
         throw new Error(data.message || '회원가입 중 오류가 발생했습니다.');
@@ -92,11 +98,18 @@ export default function TeacherRegister() {
         confirmPassword: '',
       });
       
+      // 브라우저 콘솔에 가입 성공 정보 기록
+      console.log('회원가입 성공:', data.teacher);
+      
+      // 로컬 스토리지에 회원가입 성공 정보 임시 저장 (개발 목적)
+      localStorage.setItem('lastRegisteredEmail', normalizedEmail);
+      
       // 3초 후 로그인 페이지로 이동
       setTimeout(() => {
         router.push('/teacher/login');
       }, 3000);
     } catch (err) {
+      console.error('회원가입 오류:', err);
       setError(err.message);
     } finally {
       setIsLoading(false);

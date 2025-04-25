@@ -18,9 +18,12 @@ export async function POST(request) {
       );
     }
     
+    // 이메일 정규화 (소문자 변환 및 공백 제거)
+    const normalizedEmail = email.toLowerCase().trim();
+    
     // 이메일 형식 검증
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(normalizedEmail)) {
       return NextResponse.json(
         { success: false, message: '유효한 이메일 주소를 입력해주세요.' },
         { status: 400 }
@@ -39,7 +42,7 @@ export async function POST(request) {
     const TeacherModel = await getTeacherModel();
     
     // 이메일 중복 확인
-    const existingTeacher = await TeacherModel.findOne({ email });
+    const existingTeacher = await TeacherModel.findOne({ email: normalizedEmail });
     if (existingTeacher) {
       return NextResponse.json(
         { success: false, message: '이미 등록된 이메일입니다.' },
@@ -52,7 +55,7 @@ export async function POST(request) {
     
     // 교사 계정 생성
     const newTeacher = new TeacherModel({
-      email,
+      email: normalizedEmail,
       name,
       password: hashedPassword,
     });
@@ -65,7 +68,7 @@ export async function POST(request) {
         success: true,
         message: '회원가입이 완료되었습니다.',
         teacher: {
-          id: newTeacher._id,
+          id: newTeacher._id.toString(),
           email: newTeacher.email,
           name: newTeacher.name,
           createdAt: newTeacher.createdAt,
