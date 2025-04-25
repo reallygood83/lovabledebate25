@@ -345,7 +345,7 @@ export default function SubmitOpinion() {
                   name="topic"
                   value={formData.topic}
                   onChange={handleChange}
-                  className={formErrors.topic ? `${styles.input} ${styles.inputError}` : styles.input}
+                  className={formErrors.topic ? `${styles.topicInput} ${styles.inputError}` : styles.topicInput}
                   placeholder="예: 초등학교에서 휴대폰 사용을 허용해야 할까요?"
                   required
                   rows={2}

@@ -74,7 +74,7 @@
 }
 
 /* 토론 주제 입력 필드 스타일 */
-.input[name="topic"], textarea[name="topic"] {
+.topicInput {
   padding: 0.75rem;
   font-size: 1.1rem;
   min-height: 60px;
@@ -87,7 +87,7 @@
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.input[name="topic"]:focus, textarea[name="topic"]:focus {
+.topicInput:focus {
   border-color: #0070f3;
   box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.2);
 }
