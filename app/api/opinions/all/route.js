@@ -1,69 +1,31 @@
+import { connectToDatabase } from '@/lib/db';
+import Opinion from '@/models/opinion';
 import { NextResponse } from 'next/server';
-import getOpinionModel from '@/lib/models/Opinion';
 
 // 모든 의견 조회 API (교사용)
 export async function GET(request) {
   try {
-    const Opinion = await getOpinionModel();
-    
-    // URL의 쿼리 파라미터 가져오기
+    // URL 쿼리 파라미터에서 teacherId 추출
     const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get('limit') || '10', 10);
-    const page = parseInt(searchParams.get('page') || '1', 10);
-    const status = searchParams.get('status');
-    const searchTerm = searchParams.get('search');
+    const teacherId = searchParams.get('teacherId');
     
-    // 페이지네이션 설정
-    const skip = (page - 1) * limit;
+    await connectToDatabase();
     
-    // 최대 limit 제한
-    const safeLimit = Math.min(limit, 50);
+    // 쿼리 조건 설정
+    const query = teacherId ? { teacherId } : {};
     
-    // 쿼리 구성
-    let query = {};
-    
-    // 상태 필터링
-    if (status) {
-      query.status = status;
-    }
-    
-    // 검색어 필터링
-    if (searchTerm) {
-      query = {
-        ...query,
-        $or: [
-          { studentName: { $regex: searchTerm, $options: 'i' } },
-          { topic: { $regex: searchTerm, $options: 'i' } },
-          { content: { $regex: searchTerm, $options: 'i' } },
-          { studentClass: { $regex: searchTerm, $options: 'i' } },
-        ]
-      };
-    }
-    
-    // 모든 의견 최신순으로 조회
-    const opinions = await Opinion.find(query)
-      .sort({ submittedAt: -1 })
-      .skip(skip)
-      .limit(safeLimit);
-    
-    // 전체 개수 조회
-    const total = await Opinion.countDocuments(query);
+    // 의견을 생성된 날짜 기준으로 내림차순 정렬
+    const opinions = await Opinion.find(query).sort({ createdAt: -1 });
     
     return NextResponse.json({ 
-      success: true, 
-      data: opinions,
-      pagination: {
-        total,
-        page,
-        limit: safeLimit,
-        pages: Math.ceil(total / safeLimit)
-      }
+      success: true,
+      data: opinions
     });
   } catch (error) {
-    console.error('의견 조회 에러:', error);
-    return NextResponse.json(
-      { success: false, error: '의견 조회 중 오류가 발생했습니다', details: error.message },
-      { status: 500 }
-    );
+    console.error('의견 조회 오류:', error);
+    return NextResponse.json({ 
+      success: false, 
+      message: '의견을 불러오는데 실패했습니다.' 
+    }, { status: 500 });
   }
 } 

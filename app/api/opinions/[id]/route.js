@@ -46,7 +46,7 @@ export async function PATCH(request, context) {
     const { params } = context;
     const id = params.id;
     const body = await request.json();
-    const { feedback, teacherNote, isPublic, status } = body;
+    const { feedback, teacherNote, isPublic, status, teacherId } = body;
     
     // 추후 인증 검사 추가
     // TODO: 인증 및 권한 검사 필요
@@ -74,6 +74,11 @@ export async function PATCH(request, context) {
     if (teacherNote !== undefined) opinion.teacherNote = teacherNote;
     if (isPublic !== undefined) opinion.isPublic = isPublic;
     if (status !== undefined) opinion.status = status;
+    
+    // 교사 ID 할당 (처음 피드백을 남기는 경우에만)
+    if (teacherId && !opinion.teacherId) {
+      opinion.teacherId = teacherId;
+    }
     
     await opinion.save();
     

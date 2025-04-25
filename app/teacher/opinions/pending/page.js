@@ -46,7 +46,21 @@ export default function PendingOpinions() {
   const fetchOpinions = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/opinions?status=pending&page=${currentPage}&limit=10`);
+      // 로컬 스토리지에서 교사 정보 가져오기
+      const teacherInfoStr = localStorage.getItem('teacherInfo');
+      let teacherId = '';
+      
+      if (teacherInfoStr) {
+        try {
+          const teacherInfo = JSON.parse(teacherInfoStr);
+          teacherId = teacherInfo.id || '';
+        } catch (e) {
+          console.error('교사 정보 파싱 오류:', e);
+        }
+      }
+      
+      // 교사 ID를 쿼리 파라미터로 추가
+      const response = await fetch(`/api/opinions/all?status=pending&page=${currentPage}&limit=10&teacherId=${teacherId}`);
 
       if (!response.ok) {
         throw new Error("의견 데이터를 불러오는데 실패했습니다");
@@ -54,7 +68,7 @@ export default function PendingOpinions() {
 
       const data = await response.json();
       setOpinions(data.data || []);
-      setTotalPages(data.totalPages || 1);
+      setTotalPages(data.pagination?.pages || 1);
     } catch (err) {
       setError(err.message);
     } finally {

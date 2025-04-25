@@ -226,6 +226,19 @@ export default function ReviewOpinion() {
       setError('');
       setSuccessMessage('');
       
+      // 로컬 스토리지에서 교사 정보 가져오기
+      const teacherInfoStr = localStorage.getItem('teacherInfo');
+      let teacherId = '';
+      
+      if (teacherInfoStr) {
+        try {
+          const teacherInfo = JSON.parse(teacherInfoStr);
+          teacherId = teacherInfo.id || '';
+        } catch (e) {
+          console.error('교사 정보 파싱 오류:', e);
+        }
+      }
+      
       const response = await fetch(`/api/opinions/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -233,7 +246,8 @@ export default function ReviewOpinion() {
           feedback,
           teacherNote,
           isPublic,
-          status: 'reviewed'
+          status: 'reviewed',
+          teacherId // 교사 ID 추가
         })
       });
       

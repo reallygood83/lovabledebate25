@@ -50,12 +50,14 @@ export default function SubmitOpinion() {
     content: '',
     studentName: '',
     studentClass: '',
+    classCode: '',
   });
   const [formErrors, setFormErrors] = useState({
     topic: '',
     content: '',
     studentName: '',
     studentClass: '',
+    classCode: '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -72,12 +74,14 @@ export default function SubmitOpinion() {
   useEffect(() => {
     const savedName = localStorage.getItem('studentName');
     const savedClass = localStorage.getItem('studentClass');
+    const savedClassCode = localStorage.getItem('classCode');
     
-    if (savedName || savedClass) {
+    if (savedName || savedClass || savedClassCode) {
       setFormData(prev => ({
         ...prev,
         studentName: savedName || '',
         studentClass: savedClass || '',
+        classCode: savedClassCode || '',
       }));
     }
   }, []);
@@ -149,6 +153,7 @@ export default function SubmitOpinion() {
       content: '',
       studentName: '',
       studentClass: '',
+      classCode: '',
     };
     
     // 토론 주제 검증
@@ -190,6 +195,15 @@ export default function SubmitOpinion() {
       isValid = false;
     }
     
+    // 학급 코드 검증
+    if (!formData.classCode.trim()) {
+      errors.classCode = '학급 코드를 입력해주세요.';
+      isValid = false;
+    } else if (formData.classCode.length !== 4) {
+      errors.classCode = '학급 코드는 4자리여야 합니다.';
+      isValid = false;
+    }
+    
     setFormErrors(errors);
     return isValid;
   };
@@ -206,9 +220,10 @@ export default function SubmitOpinion() {
     setIsLoading(true);
     
     try {
-      // 학생 정보 로컬 스토리지에 저장
+      // 학생 정보 및 학급 코드 로컬 스토리지에 저장
       localStorage.setItem('studentName', formData.studentName);
       localStorage.setItem('studentClass', formData.studentClass);
+      localStorage.setItem('classCode', formData.classCode);
       
       const response = await fetch('/api/opinions', {
         method: 'POST',
@@ -234,6 +249,7 @@ export default function SubmitOpinion() {
         ...prev,
         topic: '',
         content: '',
+        classCode: '',
       }));
       
     } catch (err) {
@@ -449,6 +465,28 @@ export default function SubmitOpinion() {
                 />
                 {formErrors.studentClass && <p className={styles.errorText}>{formErrors.studentClass}</p>}
               </div>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="classCode" className={styles.label}>
+                <FaSchool className={styles.labelIcon} /> 학급 코드
+              </label>
+              <input
+                type="text"
+                id="classCode"
+                name="classCode"
+                value={formData.classCode}
+                onChange={handleChange}
+                placeholder="교사가 제공한 4자리 학급 코드"
+                className={styles.input}
+                maxLength={4}
+              />
+              {formErrors.classCode && (
+                <p className={styles.errorText}>{formErrors.classCode}</p>
+              )}
+              <p className={styles.helpText}>
+                교사가 제공한 4자리 학급 코드를 입력하세요.
+              </p>
             </div>
 
             {error && (

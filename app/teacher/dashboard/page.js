@@ -48,8 +48,22 @@ export default function TeacherDashboard() {
     const fetchOpinions = async () => {
       try {
         setIsLoading(true);
-        // 모든 의견 가져오기 API 엔드포인트 필요 (현재는 공개된 의견만 가져옴)
-        const response = await fetch('/api/opinions/all');
+        
+        // 로컬 스토리지에서 교사 정보 가져오기
+        const teacherInfoStr = localStorage.getItem('teacherInfo');
+        let teacherId = '';
+        
+        if (teacherInfoStr) {
+          try {
+            const teacherInfo = JSON.parse(teacherInfoStr);
+            teacherId = teacherInfo.id || '';
+          } catch (e) {
+            console.error('교사 정보 파싱 오류:', e);
+          }
+        }
+        
+        // 교사 ID를 쿼리 파라미터로 추가하여 해당 교사의 의견만 가져옴
+        const response = await fetch(`/api/opinions/all?teacherId=${teacherId}`);
         const data = await response.json();
 
         if (!response.ok) {
