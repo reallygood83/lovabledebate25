@@ -53,8 +53,9 @@
 
 .statsContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .statCard {
@@ -130,9 +131,9 @@
 
 .sectionTitle {
   font-size: 1.5rem;
-  color: #333;
-  margin: 0 0 1.5rem 0;
   font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
 }
 
 .loading, .error, .emptyState {
@@ -249,4 +250,70 @@
   opacity: 0.6;
   cursor: not-allowed;
   pointer-events: none;
+}
+
+/* 학급 정보 컨테이너 */
+.classesContainer {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.classesList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.classCard {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.classCard:hover {
+  transform: translateY(-2px);
+}
+
+.className {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #1a73e8;
+}
+
+.classDetails {
+  font-size: 0.95rem;
+}
+
+.classCodeContainer {
+  margin: 0.5rem 0;
+  display: flex;
+  align-items: center;
+}
+
+.codeLabel {
+  font-weight: 500;
+  margin-right: 0.5rem;
+  color: #555;
+}
+
+.classCode {
+  background: #e9f0fd;
+  color: #1a73e8;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-family: monospace;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.classDescription {
+  color: #666;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
 } 

@@ -9,6 +9,7 @@ export default function TeacherDashboard() {
   const [opinions, setOpinions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [classes, setClasses] = useState([]);
   const [stats, setStats] = useState({
     total: 0,
     pending: 0,
@@ -42,6 +43,40 @@ export default function TeacherDashboard() {
       router.push('/teacher/login');
     }
   }, [router]);
+
+  // 교사의 학급 정보 가져오기
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        // 로컬 스토리지에서 교사 정보 가져오기
+        const teacherInfoStr = localStorage.getItem('teacherInfo');
+        let teacherId = '';
+        
+        if (teacherInfoStr) {
+          try {
+            const teacherInfo = JSON.parse(teacherInfoStr);
+            teacherId = teacherInfo.id || '';
+          } catch (e) {
+            console.error('교사 정보 파싱 오류:', e);
+          }
+        }
+        
+        if (!teacherId) return;
+        
+        // 교사 ID로 학급 정보 조회
+        const response = await fetch(`/api/class/teacher?teacherId=${teacherId}`);
+        const data = await response.json();
+        
+        if (response.ok) {
+          setClasses(data.data || []);
+        }
+      } catch (err) {
+        console.error('학급 정보 조회 오류:', err);
+      }
+    };
+    
+    fetchClasses();
+  }, []);
 
   // 의견 목록 가져오기
   useEffect(() => {
@@ -126,6 +161,28 @@ export default function TeacherDashboard() {
             <p className={styles.statNumber}>{stats.reviewed}</p>
           </div>
         </div>
+
+        {classes.length > 0 && (
+          <div className={styles.classesContainer}>
+            <h2 className={styles.sectionTitle}>내 학급 정보</h2>
+            <div className={styles.classesList}>
+              {classes.map((classItem) => (
+                <div key={classItem._id} className={styles.classCard}>
+                  <h3 className={styles.className}>{classItem.name}</h3>
+                  <div className={styles.classDetails}>
+                    <div className={styles.classCodeContainer}>
+                      <span className={styles.codeLabel}>학급 코드:</span>
+                      <span className={styles.classCode}>{classItem.joinCode}</span>
+                    </div>
+                    {classItem.description && (
+                      <p className={styles.classDescription}>{classItem.description}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className={styles.actions}>
           <Link href="/teacher/opinions/pending" className={styles.button}>
