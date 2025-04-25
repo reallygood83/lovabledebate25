@@ -1,6 +1,5 @@
-import { connectToDatabase } from '@/lib/db';
-import Opinion from '@/models/opinion';
 import { NextResponse } from 'next/server';
+import getOpinionModel from '@/lib/models/Opinion';
 
 // 모든 의견 조회 API (교사용)
 export async function GET(request) {
@@ -9,13 +8,14 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const teacherId = searchParams.get('teacherId');
     
-    await connectToDatabase();
+    // 모델 가져오기
+    const Opinion = await getOpinionModel();
     
     // 쿼리 조건 설정
     const query = teacherId ? { teacherId } : {};
     
-    // 의견을 생성된 날짜 기준으로 내림차순 정렬
-    const opinions = await Opinion.find(query).sort({ createdAt: -1 });
+    // 의견을 제출 날짜 기준으로 내림차순 정렬
+    const opinions = await Opinion.find(query).sort({ submittedAt: -1 });
     
     return NextResponse.json({ 
       success: true,
