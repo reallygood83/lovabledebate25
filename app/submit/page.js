@@ -340,8 +340,7 @@ export default function SubmitOpinion() {
                 </span>
               </div>
               <div className={styles.inputWithSuggestions}>
-                <input
-                  type="text"
+                <textarea
                   id="topic"
                   name="topic"
                   value={formData.topic}
@@ -349,6 +348,7 @@ export default function SubmitOpinion() {
                   className={formErrors.topic ? `${styles.input} ${styles.inputError}` : styles.input}
                   placeholder="예: 초등학교에서 휴대폰 사용을 허용해야 할까요?"
                   required
+                  rows={2}
                 />
                 {showTopicSuggestions && formData.topic.length > 0 && (
                   <ul className={styles.suggestionsList}>
