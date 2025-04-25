@@ -17,8 +17,25 @@ export default function CreateClass() {
 
   // 인증 확인
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('teacherAuth') === 'true';
-    if (!isAuthenticated) {
+    const teacherInfo = localStorage.getItem('teacherInfo');
+    
+    if (!teacherInfo) {
+      console.log('로그인 정보가 없어 로그인 페이지로 이동합니다.');
+      router.push('/teacher/login');
+      return;
+    }
+    
+    try {
+      // 유효한 JSON인지 확인
+      const teacherData = JSON.parse(teacherInfo);
+      if (!teacherData || !teacherData.id) {
+        console.log('유효하지 않은 교사 정보:', teacherData);
+        localStorage.removeItem('teacherInfo');
+        router.push('/teacher/login');
+      }
+    } catch (error) {
+      console.error('교사 정보 파싱 오류:', error);
+      localStorage.removeItem('teacherInfo');
       router.push('/teacher/login');
     }
   }, [router]);
@@ -81,8 +98,22 @@ export default function CreateClass() {
       setIsLoading(true);
       setError('');
       
-      // 교사 ID 가져오기 (임시)
-      const teacherId = localStorage.getItem('teacherId') || '65e8f4b2c812700014d2e0b8'; // 임시 ID
+      // 교사 ID 가져오기
+      let teacherId = '';
+      const teacherInfoStr = localStorage.getItem('teacherInfo');
+      
+      if (teacherInfoStr) {
+        try {
+          const teacherInfo = JSON.parse(teacherInfoStr);
+          teacherId = teacherInfo.id || '';
+        } catch (e) {
+          console.error('교사 정보 파싱 오류:', e);
+        }
+      }
+      
+      if (!teacherId) {
+        throw new Error('교사 정보를 찾을 수 없습니다. 다시 로그인해 주세요.');
+      }
       
       const response = await fetch('/api/class', {
         method: 'POST',
@@ -102,7 +133,7 @@ export default function CreateClass() {
       }
       
       // 성공 메시지 설정
-      setSuccessMessage('반이 성공적으로 생성되었습니다!');
+      setSuccessMessage(`반이 성공적으로 생성되었습니다! 학생들에게 알려줄 학급 코드는 ${data.class.joinCode} 입니다.`);
       
       // 폼 초기화
       setFormData({
@@ -114,10 +145,10 @@ export default function CreateClass() {
       // 랜덤 코드 새로 생성
       generateRandomCode();
       
-      // 3초 후 반 목록 페이지로 이동
+      // 3초 후 대시보드로 이동
       setTimeout(() => {
-        router.push('/teacher/topics');
-      }, 3000);
+        router.push('/teacher/dashboard');
+      }, 5000);
       
     } catch (err) {
       setError(err.message || '오류가 발생했습니다.');

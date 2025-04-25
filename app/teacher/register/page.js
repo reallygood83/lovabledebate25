@@ -90,7 +90,14 @@ export default function TeacherRegister() {
         throw new Error(data.message || '회원가입 중 오류가 발생했습니다.');
       }
       
-      setSuccess('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
+      // 교사 정보 저장
+      localStorage.setItem('teacherInfo', JSON.stringify({
+        id: data.teacher.id,
+        name: data.teacher.name,
+        email: data.teacher.email
+      }));
+      
+      setSuccess('회원가입이 완료되었습니다. 첫 학급을 생성하러 이동합니다.');
       setFormData({
         name: '',
         email: '',
@@ -104,9 +111,9 @@ export default function TeacherRegister() {
       // 로컬 스토리지에 회원가입 성공 정보 임시 저장 (개발 목적)
       localStorage.setItem('lastRegisteredEmail', normalizedEmail);
       
-      // 3초 후 로그인 페이지로 이동
+      // 3초 후 학급 생성 페이지로 이동
       setTimeout(() => {
-        router.push('/teacher/login');
+        router.push('/teacher/class/create');
       }, 3000);
     } catch (err) {
       console.error('회원가입 오류:', err);
