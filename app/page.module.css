@@ -11,7 +11,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #2563eb;
+  background-color: #333333;
   color: white;
 }
 
@@ -19,6 +19,13 @@
   font-size: 1.8rem;
   font-weight: 700;
   margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.mainTitle::before {
+  content: '❤️';
+  margin-right: 0.5rem;
 }
 
 .mainNav ul {
@@ -35,6 +42,11 @@
   font-size: 1rem;
   padding: 0.5rem 0;
   position: relative;
+  transition: color 0.2s ease;
+}
+
+.mainNav a:hover {
+  color: #f48484;
 }
 
 .mainNav a.active::after,
@@ -45,7 +57,7 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background-color: white;
+  background-color: #ee5c5c;
 }
 
 /* 메인 컨텐츠 스타일 */
@@ -56,7 +68,7 @@
 
 /* 히어로 섹션 스타일 */
 .heroSection {
-  background-color: #eef2ff;
+  background-color: #ffe8e8;
   padding: 4rem 2rem;
   text-align: center;
   display: flex;
@@ -68,7 +80,7 @@
 .heroTitle {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #2563eb;
+  color: #ee5c5c;
   margin-bottom: 1.5rem;
 }
 
@@ -77,7 +89,7 @@
   max-width: 800px;
   margin: 0 auto 2rem;
   line-height: 1.6;
-  color: #4b5563;
+  color: #333333;
 }
 
 .buttonGroup {
@@ -88,32 +100,40 @@
 
 .primaryButton, 
 .secondaryButton {
-  padding: 0.75rem 1.5rem;
+  display: inline-block;
+  padding: 0.875rem 1.75rem;
   border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 1.125rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  text-align: center;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .primaryButton {
-  background-color: #2563eb;
+  background-color: #ee5c5c;
   color: white;
   border: none;
 }
 
 .primaryButton:hover {
-  background-color: #1d4ed8;
+  background-color: #d04747;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .secondaryButton {
   background-color: white;
-  color: #2563eb;
-  border: 1px solid #2563eb;
+  color: #ee5c5c;
+  border: 2px solid #ee5c5c;
 }
 
 .secondaryButton:hover {
-  background-color: #eef2ff;
+  background-color: #ffe8e8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* 접속 섹션 스타일 */
@@ -123,10 +143,46 @@
   margin: 0 auto;
 }
 
+.accessTitle {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #333333;
+  position: relative;
+  padding-bottom: 1rem;
+  font-weight: 700;
+  font-size: 1.75rem;
+}
+
+.accessTitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background-color: #ee5c5c;
+  border-radius: 3px;
+}
+
 .accessSection h2 {
   text-align: center;
   margin-bottom: 2rem;
-  color: #1f2937;
+  color: #333333;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.accessSection h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background-color: #ee5c5c;
+  border-radius: 3px;
 }
 
 /* 학생 옵션 카드 스타일 */
@@ -140,34 +196,38 @@
 .optionCard {
   background-color: white;
   border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   padding: 1.5rem;
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  border: 1px solid rgba(238, 92, 92, 0.1);
 }
 
 .optionCard:hover {
   transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  border-color: rgba(238, 92, 92, 0.3);
 }
 
 .optionCard h3 {
-  color: #2563eb;
+  color: #ee5c5c;
   margin-top: 0;
   margin-bottom: 0.75rem;
 }
 
 .optionButton {
   display: inline-block;
-  background-color: #2563eb;
+  background-color: #ee5c5c;
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 0.375rem;
   text-decoration: none;
   margin-top: 1rem;
   font-weight: 500;
+  transition: background-color 0.2s;
 }
 
 .optionButton:hover {
-  background-color: #1d4ed8;
+  background-color: #d04747;
 }
 
 /* 교사 접속 스타일 */
@@ -179,12 +239,13 @@
 .loginCard {
   background-color: white;
   border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   padding: 2rem;
+  border: 1px solid rgba(238, 92, 92, 0.1);
 }
 
 .loginCard h3 {
-  color: #2563eb;
+  color: #ee5c5c;
   margin-top: 0;
   margin-bottom: 0.75rem;
 }
@@ -198,15 +259,16 @@
 
 .formInput {
   padding: 0.75rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid #d4d4d4;
   border-radius: 0.375rem;
   font-size: 1rem;
+  transition: border-color 0.2s;
 }
 
 .formInput:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+  border-color: #ee5c5c;
+  box-shadow: 0 0 0 2px rgba(238, 92, 92, 0.2);
 }
 
 .inputError {
@@ -214,96 +276,123 @@
 }
 
 .formButton {
-  background-color: #2563eb;
+  background-color: #ee5c5c;
   color: white;
-  padding: 0.75rem;
   border: none;
-  border-radius: 0.375rem;
-  font-weight: 500;
+  padding: 0.875rem 1.75rem;
+  border-radius: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
 .formButton:hover {
-  background-color: #1d4ed8;
+  background-color: #d04747;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .formButton:disabled {
-  background-color: #93c5fd;
+  background-color: #d4d4d4;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .errorText {
   color: #ef4444;
   font-size: 0.875rem;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
 }
 
 .backButton {
-  display: block;
-  margin: 2rem auto 0;
-  background-color: transparent;
-  border: none;
-  color: #6b7280;
-  cursor: pointer;
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  color: #333333;
+  text-decoration: none;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+}
+
+.backButton::before {
+  content: '←';
+  margin-right: 0.25rem;
 }
 
 .backButton:hover {
-  color: #1f2937;
-  text-decoration: underline;
+  color: #ee5c5c;
 }
 
-/* 기능 섹션 스타일 */
+/* 특징 섹션 스타일 */
 .featuresSection {
+  background-color: #ffe8e8;
   padding: 4rem 2rem;
-  background-color: white;
 }
 
 .featuresSection h2 {
   text-align: center;
   margin-bottom: 3rem;
-  color: #1f2937;
+  color: #333333;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.featuresSection h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background-color: #ee5c5c;
+  border-radius: 3px;
 }
 
 .featuresList {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .featureItem {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
   text-align: center;
-  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 .featureIcon {
+  color: #ee5c5c;
   font-size: 2.5rem;
   margin-bottom: 1rem;
 }
 
 .featureItem h3 {
-  color: #2563eb;
+  color: #ee5c5c;
   margin-bottom: 0.75rem;
 }
 
 .featureItem p {
-  color: #6b7280;
+  color: #555555;
+  line-height: 1.6;
 }
 
 /* 푸터 스타일 */
 .mainFooter {
-  background-color: #f3f4f6;
-  padding: 1.5rem;
+  background-color: #333333;
+  color: white;
+  padding: 2rem;
   text-align: center;
-  color: #4b5563;
-  font-size: 0.875rem;
 }
 
-/* 반응형 디자인 */
+/* 미디어 쿼리 */
 @media (max-width: 768px) {
   .mainHeader {
     flex-direction: column;
@@ -313,136 +402,196 @@
   .mainNav {
     margin-top: 1rem;
     width: 100%;
-    overflow-x: auto;
   }
   
   .mainNav ul {
-    width: max-content;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
   }
   
   .heroTitle {
     font-size: 2rem;
+    text-align: center;
+  }
+  
+  .heroText {
+    text-align: center;
   }
   
   .buttonGroup {
     flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+    gap: 1rem;
+  }
+
+  .featuresList {
+    grid-template-columns: 1fr;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+  }
+  
+  .card {
+    max-width: 100%;
+  }
+  
+  .buttonContainer {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .button, .secondaryButton, .primaryButton {
+    width: 100%;
   }
 }
 
-/* 기존의 CSS 클래스는 그대로 유지 (삭제하지 않음) */
+/* 태블릿 뷰 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .studentOptions, 
+  .featuresList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 데스크톱 뷰 */
+@media (min-width: 1025px) {
+  .studentOptions, 
+  .featuresList {
+    grid-width: repeat(3, 1fr);
+  }
+}
+
+/* 추가 스타일 */
 .container {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 0 1rem;
 }
 
 .header {
-  padding: 4rem 0;
+  background-color: #333333;
+  color: white;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  text-align: center;
+  padding: 1rem 2rem;
 }
 
 .title {
-  margin: 0 0 1rem;
-  line-height: 1.15;
-  font-size: 2.5rem;
-  color: #333;
-}
-
-.description {
-  line-height: 1.5;
-  font-size: 1.25rem;
-  color: #666;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.main {
-  min-height: 80vh;
-  padding: 2rem 0;
-  flex: 1;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
 }
 
-.grid {
+.title::before {
+  content: '❤️';
+  margin-right: 0.5rem;
+}
+
+.description {
+  margin: 2rem 0;
+  line-height: 1.5;
+  font-size: 1.1rem;
+  max-width: 800px;
+}
+
+.main {
+  padding: 2rem;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  max-width: 1200px;
+  flex-direction: column;
+  align-items: center;
+  min-height: calc(100vh - 70px);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
   width: 100%;
-  margin-top: 2rem;
+  max-width: 1200px;
+  margin: 2rem 0;
 }
 
 .card {
+  background-color: white;
+  border-radius: 0.5rem;
   padding: 1.5rem;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 500px;
-  transition: transform 0.15s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid rgba(238, 92, 92, 0.1);
 }
 
 .card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
 .card h2 {
-  margin: 0 0 1rem 0;
+  margin-top: 0;
+  margin-bottom: 1rem;
   font-size: 1.5rem;
-  color: #333;
+  color: #ee5c5c;
 }
 
 .buttonContainer {
   display: flex;
   gap: 1rem;
-  margin: 1.5rem 0;
-  flex-wrap: wrap;
+  margin-top: 1.5rem;
+  justify-content: center;
 }
 
 .button, .secondaryButton {
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  font-weight: 500;
-  text-decoration: none;
+  padding: 0.875rem 1.75rem;
+  border-radius: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
   text-align: center;
-  transition: background-color 0.3s ease;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .button {
-  background-color: #0070f3;
+  background-color: #ee5c5c;
   color: white;
+  border: none;
 }
 
 .button:hover {
-  background-color: #0051cc;
+  background-color: #d04747;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .secondaryButton {
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: white;
+  color: #ee5c5c;
+  border: 2px solid #ee5c5c;
 }
 
 .secondaryButton:hover {
-  background-color: #e0e0e0;
+  background-color: #ffe8e8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .checkFeedback {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #eaeaea;
+  text-align: center;
+  margin: 2rem 0;
+  max-width: 500px;
 }
 
 .checkFeedback h3 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-  font-size: 1.2rem;
-  color: #333;
+  color: #ee5c5c;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
 }
 
 .codeForm {
@@ -450,79 +599,103 @@
   flex-direction: column;
   gap: 1rem;
   margin-top: 1rem;
+  width: 100%;
 }
 
 .input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  padding: 0.75rem;
+  border: 1px solid #d4d4d4;
+  border-radius: 0.375rem;
   font-size: 1rem;
+  width: 100%;
 }
 
 .input:focus {
   outline: none;
-  border-color: #0070f3;
+  border-color: #ee5c5c;
+  box-shadow: 0 0 0 2px rgba(238, 92, 92, 0.2);
 }
 
 .inputError {
-  border-color: #ff0000;
+  border-color: #ef4444;
 }
 
 .error {
-  color: #ff0000;
+  color: #ef4444;
+  font-size: 0.875rem;
   margin-top: 0.5rem;
-  font-size: 0.9rem;
+  text-align: left;
 }
 
 .info {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #eaeaea;
+  background-color: #ffe8e8;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin: 2rem 0;
 }
 
 .info h3 {
+  color: #ee5c5c;
   margin-top: 0;
-  margin-bottom: 0.5rem;
-  font-size: 1.2rem;
-  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
 }
 
 .info p {
+  color: #333333;
   margin: 0.5rem 0;
-  color: #666;
-  font-size: 0.95rem;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .footer {
-  width: 100%;
-  padding: 2rem 0;
-  border-top: 1px solid #eaeaea;
+  background-color: #333333;
+  color: white;
+  padding: 2rem;
+  text-align: center;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  background-color: #fafafa;
+  gap: 1rem;
 }
 
 .footer p {
-  color: #666;
+  margin: 0;
 }
 
-@media (max-width: 768px) {
-  .grid {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .card {
-    width: 100%;
-  }
-  
-  .buttonContainer {
-    flex-direction: column;
-  }
-  
-  .button, .secondaryButton {
-    width: 100%;
-  }
+.naverLoginButton {
+  background-color: #03c75a;
+  color: white;
+  border: none;
+  padding: 0.875rem 1.75rem;
+  border-radius: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.naverLoginButton:hover {
+  background-color: #02a647;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.naverLoginButton:disabled {
+  background-color: #d4d4d4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.naverLoginButton::before {
+  content: 'N';
+  font-weight: bold;
+  margin-right: 0.5rem;
+  font-size: 1.25rem;
 }

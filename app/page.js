@@ -124,7 +124,7 @@ export default function Home() {
   return (
     <div className={styles.mainContainer}>
       <header className={styles.mainHeader}>
-        <h1 className={styles.mainTitle}>토론 튜터</h1>
+        <h1 className={styles.mainTitle}>LovableDebate</h1>
         <nav className={styles.mainNav}>
           <ul>
             <li><a href="https://lovabledebate25.vercel.app/" className={styles.active}>홈</a></li>
@@ -142,13 +142,13 @@ export default function Home() {
           
           <div className={styles.buttonGroup}>
             <button 
-              className={styles.primaryButton}
+              className={`lovable-btn-primary large`}
               onClick={() => setActiveSection('student')}
             >
               학생으로 접속하기
             </button>
             <button 
-              className={styles.secondaryButton}
+              className={`lovable-btn-secondary large`}
               onClick={handleTeacherAccess}
             >
               교사로 접속하기
@@ -158,60 +158,60 @@ export default function Home() {
 
         {activeSection === 'student' && (
           <div className={styles.accessSection}>
-            <h2>학생 접속</h2>
+            <h2 className={styles.accessTitle}>학생 접속</h2>
             <div className={styles.studentOptions}>
               <div className={styles.optionCard}>
-                <h3>토론 의견 제출하기</h3>
-                <p>토론에 대한 내 의견을 작성하고 제출합니다.</p>
+                <h3>토론 의견 제출</h3>
+                <p>토론 주제에 대한 의견을 작성하고 제출합니다.</p>
                 <Link href="/submit" className={styles.optionButton}>
-                  의견 제출하기
+                  의견 작성하기
                 </Link>
               </div>
-              
               <div className={styles.optionCard}>
-                <h3>좋은 예시 보기</h3>
-                <p>다른 학생들의 우수한 토론 의견을 살펴봅니다.</p>
-                <Link href="/examples" className={styles.optionButton}>
-                  예시 보기
+                <h3>우수 의견 살펴보기</h3>
+                <p>다른 학생들의 우수한 의견을 확인합니다.</p>
+                <Link href="/student/examples" className={styles.optionButton}>
+                  의견 보기
                 </Link>
               </div>
-              
               <div className={styles.optionCard}>
-                <h3>피드백 확인하기</h3>
+                <h3>피드백 확인</h3>
                 <p>내 의견에 대한 선생님의 피드백을 확인합니다.</p>
-                <form onSubmit={handleStudentLogin} className={styles.loginForm}>
-                  <input
-                    type="text"
-                    name="studentName"
-                    value={loginData.studentName}
-                    onChange={handleStudentChange}
-                    placeholder="이름"
-                    className={error ? `${styles.formInput} ${styles.inputError}` : styles.formInput}
-                    disabled={isLoading}
-                  />
-                  <input
-                    type="password"
-                    name="accessCode"
-                    value={loginData.accessCode}
-                    onChange={handleStudentChange}
-                    placeholder="고유번호"
-                    className={error ? `${styles.formInput} ${styles.inputError}` : styles.formInput}
-                    disabled={isLoading}
-                  />
-                  <button 
-                    type="submit" 
-                    className={styles.formButton}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? '로그인 중...' : '로그인'}
-                  </button>
-                </form>
-                {error && <p className={styles.errorText}>{error}</p>}
+                <div className={styles.checkFeedback}>
+                  <form onSubmit={handleStudentLogin} className={styles.loginForm}>
+                    <input
+                      type="text"
+                      name="studentName"
+                      value={loginData.studentName}
+                      onChange={handleStudentChange}
+                      placeholder="이름"
+                      className={error ? `${styles.formInput} ${styles.inputError}` : styles.formInput}
+                      disabled={isLoading}
+                    />
+                    <input
+                      type="password"
+                      name="accessCode"
+                      value={loginData.accessCode}
+                      onChange={handleStudentChange}
+                      placeholder="고유번호"
+                      className={error ? `${styles.formInput} ${styles.inputError}` : styles.formInput}
+                      disabled={isLoading}
+                    />
+                    {error && <p className={styles.errorText}>{error}</p>}
+                    <button 
+                      type="submit" 
+                      className="lovable-btn-primary"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? '로딩 중...' : '피드백 확인하기'}
+                    </button>
+                  </form>
+                </div>
               </div>
             </div>
             
             <button 
-              className={styles.backButton}
+              className="lovable-link-more"
               onClick={() => setActiveSection(null)}
             >
               뒤로 가기
@@ -221,9 +221,9 @@ export default function Home() {
 
         {activeSection === 'teacher' && (
           <div className={styles.accessSection}>
-            <h2>교사 접속</h2>
+            <h2 className={styles.accessTitle}>교사 접속</h2>
             <div className={styles.teacherAccess}>
-              <div className={styles.loginCard}>
+              <div className="lovable-card">
                 <h3>교사 로그인</h3>
                 <p>교사 계정으로 로그인하여 대시보드에 접속합니다.</p>
                 <form onSubmit={handleTeacherLogin} className={styles.loginForm}>
@@ -248,17 +248,24 @@ export default function Home() {
                   {error && <p className={styles.errorText}>{error}</p>}
                   <button 
                     type="submit" 
-                    className={styles.formButton}
+                    className="lovable-btn-primary"
                     disabled={isLoading}
                   >
                     {isLoading ? '로그인 중...' : '대시보드 접속하기'}
+                  </button>
+                  <button 
+                    type="button" 
+                    className={styles.naverLoginButton}
+                    onClick={() => window.alert('네이버 로그인 기능은 추후 제공됩니다.')}
+                  >
+                    네이버 아이디로 로그인
                   </button>
                 </form>
               </div>
             </div>
             
             <button 
-              className={styles.backButton}
+              className="lovable-link-more"
               onClick={() => setActiveSection(null)}
             >
               뒤로 가기
@@ -270,17 +277,17 @@ export default function Home() {
           <div className={styles.featuresSection}>
             <h2>주요 기능</h2>
             <div className={styles.featuresList}>
-              <div className={styles.featureItem}>
+              <div className="lovable-card">
                 <div className={styles.featureIcon}>🔍</div>
                 <h3>토론 주제 탐색</h3>
                 <p>다양한 수준의 토론 주제를 제공합니다.</p>
               </div>
-              <div className={styles.featureItem}>
+              <div className="lovable-card">
                 <div className={styles.featureIcon}>💡</div>
                 <h3>맞춤형 피드백</h3>
                 <p>AI가 학생 의견에 맞춤형 피드백을 제공합니다.</p>
               </div>
-              <div className={styles.featureItem}>
+              <div className="lovable-card">
                 <div className={styles.featureIcon}>📊</div>
                 <h3>토론 관리</h3>
                 <p>토론 진행 상황을 쉽게 관리할 수 있습니다.</p>
@@ -291,7 +298,15 @@ export default function Home() {
       </main>
 
       <footer className={styles.mainFooter}>
-        <p>AI 기반 토론 교육 피드백 시스템 &copy; 2025 안양 박달초 김문정</p>
+        <div className="container">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <span style={{ fontSize: '1.5rem', marginRight: '0.5rem' }}>❤️</span>
+              <span>LovableDebate</span>
+            </div>
+            <p>AI 기반 토론 교육 피드백 시스템 &copy; 2025 안양 박달초 김문정</p>
+          </div>
+        </div>
       </footer>
     </div>
   );
