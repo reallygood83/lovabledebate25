@@ -98,6 +98,20 @@
   margin-top: 1rem;
 }
 
+.buttonContainer {
+  display: flex;
+  gap: 1rem;
+  margin: 2rem auto;
+  justify-content: center;
+  max-width: 600px;
+}
+
+.buttonContainer button {
+  flex: 0 1 auto;
+  width: auto;
+  min-width: 180px;
+}
+
 .primaryButton, 
 .secondaryButton {
   display: inline-block;
@@ -372,6 +386,28 @@
   color: #ee5c5c;
   font-size: 2.5rem;
   margin-bottom: 1rem;
+  text-align: center;
+}
+
+.featureContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+}
+
+.featureContent h3 {
+  color: #ee5c5c;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.featureContent p {
+  color: #555555;
+  line-height: 1.6;
+  text-align: center;
 }
 
 .featureItem h3 {
@@ -537,49 +573,6 @@
   margin-bottom: 1rem;
   font-size: 1.5rem;
   color: #ee5c5c;
-}
-
-.buttonContainer {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  justify-content: center;
-}
-
-.button, .secondaryButton {
-  padding: 0.875rem 1.75rem;
-  border-radius: 0.5rem;
-  font-size: 1.125rem;
-  font-weight: 600;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.button {
-  background-color: #ee5c5c;
-  color: white;
-  border: none;
-}
-
-.button:hover {
-  background-color: #d04747;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.secondaryButton {
-  background-color: white;
-  color: #ee5c5c;
-  border: 2px solid #ee5c5c;
-}
-
-.secondaryButton:hover {
-  background-color: #ffe8e8;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .checkFeedback {

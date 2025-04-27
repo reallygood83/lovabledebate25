@@ -140,15 +140,15 @@ export default function Home() {
             &lsquo;다름과 공존하는 경기초등토론교육모형&rsquo;에 기반하여 토론 수업을 효과적으로 준비하고 진행할 수 있도록 도와주는 AI 토론 가이드입니다.
           </p>
           
-          <div className={styles.buttonGroup}>
+          <div className={styles.buttonContainer}>
             <button 
-              className="lovable-btn-primary large"
+              className={styles.primaryButton}
               onClick={() => setActiveSection('student')}
             >
               학생으로 접속하기
             </button>
             <button 
-              className="lovable-btn-secondary large"
+              className={styles.secondaryButton}
               onClick={handleTeacherAccess}
             >
               교사로 접속하기
@@ -278,19 +278,25 @@ export default function Home() {
             <h2>주요 기능</h2>
             <div className={styles.featuresList}>
               <div className="lovable-card">
-                <div className={styles.featureIcon}>🔍</div>
-                <h3>토론 주제 탐색</h3>
-                <p>다양한 수준의 토론 주제를 제공합니다.</p>
+                <div className={styles.featureContent}>
+                  <div className={styles.featureIcon}>🔍</div>
+                  <h3>토론 주제 탐색</h3>
+                  <p>다양한 수준의 토론 주제를 제공합니다.</p>
+                </div>
               </div>
               <div className="lovable-card">
-                <div className={styles.featureIcon}>💡</div>
-                <h3>맞춤형 피드백</h3>
-                <p>AI가 학생 의견에 맞춤형 피드백을 제공합니다.</p>
+                <div className={styles.featureContent}>
+                  <div className={styles.featureIcon}>💡</div>
+                  <h3>맞춤형 피드백</h3>
+                  <p>AI가 학생 의견에 맞춤형 피드백을 제공합니다.</p>
+                </div>
               </div>
               <div className="lovable-card">
-                <div className={styles.featureIcon}>📊</div>
-                <h3>토론 관리</h3>
-                <p>토론 진행 상황을 쉽게 관리할 수 있습니다.</p>
+                <div className={styles.featureContent}>
+                  <div className={styles.featureIcon}>📊</div>
+                  <h3>토론 관리</h3>
+                  <p>토론 진행 상황을 쉽게 관리할 수 있습니다.</p>
+                </div>
               </div>
             </div>
           </div>
