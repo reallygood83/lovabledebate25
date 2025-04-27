@@ -142,13 +142,13 @@ export default function Home() {
           
           <div className={styles.buttonGroup}>
             <button 
-              className={`lovable-btn-primary large`}
+              className="lovable-btn-primary large"
               onClick={() => setActiveSection('student')}
             >
               학생으로 접속하기
             </button>
             <button 
-              className={`lovable-btn-secondary large`}
+              className="lovable-btn-secondary large"
               onClick={handleTeacherAccess}
             >
               교사로 접속하기
