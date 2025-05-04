@@ -118,7 +118,34 @@ export default function Home() {
 
   // 교사로 접속하기 핸들러 함수
   const handleTeacherAccess = () => {
-    router.push('/teacher/login'); // 바로 교사 로그인 페이지로 이동
+    // 로컬 스토리지에서 교사 정보 확인
+    try {
+      const teacherInfo = localStorage.getItem('teacherInfo');
+      
+      if (teacherInfo) {
+        // 교사 정보가 있으면 JSON 파싱
+        const teacherData = JSON.parse(teacherInfo);
+        
+        // 유효한 정보인지 및 만료되지 않았는지 확인
+        if (teacherData && teacherData.id) {
+          const expiresAt = teacherData.expiresAt;
+          
+          // 만료 시간 확인
+          if (!expiresAt || Date.now() < expiresAt) {
+            // 유효한 세션이면 바로 대시보드로 이동
+            console.log('유효한 교사 세션이 있어 대시보드로 이동합니다.');
+            router.push('/teacher/dashboard');
+            return;
+          }
+        }
+      }
+      
+      // 유효한 세션이 없으면 로그인 페이지로 이동
+      router.push('/teacher/login');
+    } catch (error) {
+      console.error('교사 세션 확인 오류:', error);
+      router.push('/teacher/login');
+    }
   };
 
   return (
