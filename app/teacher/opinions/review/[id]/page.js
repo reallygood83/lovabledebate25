@@ -82,6 +82,7 @@ export default function ReviewOpinion() {
   const [feedbackTips, setFeedbackTips] = useState([]);
   const [showTips, setShowTips] = useState(false);
   const [isTemplateVisible, setIsTemplateVisible] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   // 인증 확인
   useEffect(() => {
@@ -254,17 +255,21 @@ export default function ReviewOpinion() {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || '피드백 저장에 실패했습니다.');
+        throw new Error(data.message || '피드백 전송에 실패했습니다.');
       }
       
-      setSuccessMessage('피드백이 성공적으로 저장되었습니다!');
+      setSuccessMessage('피드백이 성공적으로 전송되었습니다!');
+      setShowSuccessPopup(true);
       
-      // 3초 후 성공 메시지 제거
+      // 3초 후 성공 메시지와 팝업 제거
       setTimeout(() => {
         setSuccessMessage('');
+        setShowSuccessPopup(false);
+        // 검토 완료 후 목록 페이지로 돌아가기
+        router.push('/teacher/opinions/pending');
       }, 3000);
     } catch (err) {
-      setError(`저장 오류: ${err.message}`);
+      setError(`전송 오류: ${err.message}`);
     } finally {
       setIsSaving(false);
     }
@@ -400,7 +405,17 @@ export default function ReviewOpinion() {
           </div>
         ) : (
           <>
-            {successMessage && (
+            {showSuccessPopup && (
+              <div className={styles.successPopup}>
+                <div className={styles.successPopupContent}>
+                  <h3>피드백 전송 완료</h3>
+                  <p>{successMessage}</p>
+                  <p>잠시 후 목록 페이지로 이동합니다...</p>
+                </div>
+              </div>
+            )}
+
+            {successMessage && !showSuccessPopup && (
               <div className={styles.successMessage}>
                 <p>{successMessage}</p>
               </div>
@@ -556,7 +571,7 @@ export default function ReviewOpinion() {
                         disabled={!feedback.trim() || isSaving}
                         className={styles.saveButton}
                       >
-                        {isSaving ? "저장 중..." : "피드백 저장"}
+                        {isSaving ? "전송 중..." : "피드백 전송"}
                       </button>
                     </div>
 

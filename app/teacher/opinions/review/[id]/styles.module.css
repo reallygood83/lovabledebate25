@@ -158,6 +158,43 @@
   border: 1px solid #a7f3d0;
 }
 
+/* 성공 팝업 스타일 */
+.successPopup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.successPopupContent {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.successPopupContent h3 {
+  color: #047857;
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+}
+
+.successPopupContent p {
+  margin: 8px 0;
+  color: #1f2937;
+  line-height: 1.5;
+}
+
 .generatedFeedbackContainer {
   margin-top: 24px;
   border: 1px solid #e5e7eb;
