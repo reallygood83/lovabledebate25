@@ -170,7 +170,7 @@ export default function Home() {
               <div className={styles.optionCard}>
                 <h3>우수 의견 살펴보기</h3>
                 <p>다른 학생들의 우수한 의견을 확인합니다.</p>
-                <Link href="/student/examples" className={styles.optionButton}>
+                <Link href="/examples" className={styles.optionButton}>
                   의견 보기
                 </Link>
               </div>
