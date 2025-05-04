@@ -185,6 +185,40 @@ export default function StudentManagement() {
     }
   };
 
+  // 학생 계정 활성화 처리
+  const handleActivate = async (studentId) => {
+    if (!window.confirm('이 학생 계정을 다시 활성화하시겠습니까?')) {
+      return;
+    }
+    
+    try {
+      setError('');
+      
+      const response = await fetch(`/api/students/${studentId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          isActive: true
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || '학생 계정 활성화에 실패했습니다.');
+      }
+      
+      // 목록 새로고침
+      fetchStudents();
+      
+    } catch (err) {
+      console.error('학생 계정 활성화 오류:', err);
+      setError(err.message || '오류가 발생했습니다.');
+    }
+  };
+
   // 일괄 생성 모달 토글
   const toggleBulkModal = () => {
     setShowBulkModal(!showBulkModal);
@@ -480,13 +514,21 @@ export default function StudentManagement() {
                         </span>
                       </div>
                       <div className={styles.tableCell}>
-                        <button
-                          onClick={() => handleDeactivate(student._id)}
-                          className={styles.deactivateButton}
-                          disabled={!student.isActive}
-                        >
-                          비활성화
-                        </button>
+                        {student.isActive ? (
+                          <button
+                            onClick={() => handleDeactivate(student._id)}
+                            className={styles.deactivateButton}
+                          >
+                            비활성화
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleActivate(student._id)}
+                            className={styles.activateButton}
+                          >
+                            활성화
+                          </button>
+                        )}
                       </div>
                     </div>
                   ))}
