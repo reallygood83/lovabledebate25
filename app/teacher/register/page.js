@@ -97,7 +97,7 @@ export default function TeacherRegister() {
         email: data.teacher.email
       }));
       
-      setSuccess('회원가입이 완료되었습니다. 첫 학급을 생성하러 이동합니다.');
+      setSuccess('회원가입이 완료되었습니다. 대시보드로 이동합니다.');
       setFormData({
         name: '',
         email: '',
@@ -111,9 +111,9 @@ export default function TeacherRegister() {
       // 로컬 스토리지에 회원가입 성공 정보 임시 저장 (개발 목적)
       localStorage.setItem('lastRegisteredEmail', normalizedEmail);
       
-      // 3초 후 학급 생성 페이지로 이동
+      // 3초 후 대시보드로 이동
       setTimeout(() => {
-        router.push('/teacher/class/create');
+        router.push('/teacher/dashboard');
       }, 3000);
     } catch (err) {
       console.error('회원가입 오류:', err);

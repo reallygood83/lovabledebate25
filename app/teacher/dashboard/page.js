@@ -15,6 +15,7 @@ export default function TeacherDashboard() {
     pending: 0,
     reviewed: 0,
   });
+  const [copiedCode, setCopiedCode] = useState('');
 
   // 인증 확인
   useEffect(() => {
@@ -64,6 +65,22 @@ export default function TeacherDashboard() {
       router.push('/teacher/login');
     }
   }, [router]);
+
+  // 학급 코드 복사 함수
+  const handleCopyCode = (code) => {
+    navigator.clipboard.writeText(code)
+      .then(() => {
+        setCopiedCode(code);
+        // 3초 후 복사 상태 초기화
+        setTimeout(() => {
+          setCopiedCode('');
+        }, 3000);
+      })
+      .catch(err => {
+        console.error('복사 실패:', err);
+        alert('코드 복사에 실패했습니다. 직접 선택하여 복사해주세요.');
+      });
+  };
 
   // 교사의 학급 정보 가져오기
   useEffect(() => {
@@ -201,9 +218,14 @@ export default function TeacherDashboard() {
           </div>
         </div>
 
-        {classes.length > 0 && (
+        {classes.length > 0 ? (
           <div className={styles.classesContainer}>
-            <h2 className={styles.sectionTitle}>내 학급 정보</h2>
+            <div className={styles.classesTitleRow}>
+              <h2 className={styles.sectionTitle}>내 학급 정보</h2>
+              <Link href="/teacher/class/create" className={styles.createClassButton}>
+                + 새 학급 생성
+              </Link>
+            </div>
             <div className={styles.classesList}>
               {classes.map((classItem) => (
                 <div key={classItem._id} className={styles.classCard}>
@@ -211,7 +233,16 @@ export default function TeacherDashboard() {
                   <div className={styles.classDetails}>
                     <div className={styles.classCodeContainer}>
                       <span className={styles.codeLabel}>학급 코드:</span>
-                      <span className={styles.classCode}>{classItem.joinCode}</span>
+                      <div className={styles.codeWrapper}>
+                        <span className={styles.classCode}>{classItem.joinCode}</span>
+                        <button
+                          onClick={() => handleCopyCode(classItem.joinCode)}
+                          className={styles.copyButton}
+                          title="코드 복사"
+                        >
+                          {copiedCode === classItem.joinCode ? '복사됨!' : '복사'}
+                        </button>
+                      </div>
                     </div>
                     {classItem.description && (
                       <p className={styles.classDescription}>{classItem.description}</p>
@@ -219,6 +250,18 @@ export default function TeacherDashboard() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        ) : (
+          <div className={styles.classesContainer}>
+            <div className={styles.classesTitleRow}>
+              <h2 className={styles.sectionTitle}>내 학급 정보</h2>
+            </div>
+            <div className={styles.noClassesMessage}>
+              <p>아직 생성된 학급이 없습니다. 학급을 생성하고 학생들에게 코드를 공유하세요.</p>
+              <Link href="/teacher/class/create" className={styles.createClassButton}>
+                첫 학급 생성하기
+              </Link>
             </div>
           </div>
         )}
