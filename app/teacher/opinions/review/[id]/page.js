@@ -186,8 +186,8 @@ export default function ReviewOpinion() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          opinion: opinion.content,
-          topic: opinion.topic,
+          studentOpinion: opinion.content,
+          discussionTopic: opinion.topic,
           instructions: instructions
         }),
       });
