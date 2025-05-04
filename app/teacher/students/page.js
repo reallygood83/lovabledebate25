@@ -48,6 +48,26 @@ export default function StudentManagement() {
         return;
       }
       
+      // 만료 시간 확인
+      const expiresAt = teacherData.expiresAt;
+      if (expiresAt && Date.now() > expiresAt) {
+        console.log('로그인 세션이 만료되었습니다:', new Date(expiresAt));
+        localStorage.removeItem('teacherInfo');
+        router.push('/teacher/login');
+        return;
+      }
+      
+      // 세션 갱신 (만료 시간 추가 7일 연장)
+      if (expiresAt) {
+        const newExpiresAt = Date.now() + (7 * 24 * 60 * 60 * 1000);
+        const updatedTeacherData = {
+          ...teacherData,
+          expiresAt: newExpiresAt
+        };
+        localStorage.setItem('teacherInfo', JSON.stringify(updatedTeacherData));
+        console.log('로그인 세션 갱신됨:', new Date(newExpiresAt));
+      }
+      
       // 학생 목록 가져오기
       fetchStudents();
     } catch (error) {

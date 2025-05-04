@@ -97,11 +97,20 @@ function LoginContent() {
           throw new Error('서버에서 올바른 사용자 정보를 받지 못했습니다.');
         }
         
+        // 현재 시간에 7일을 더해 만료 시간 설정 (밀리초 단위)
+        const expiresAt = Date.now() + (7 * 24 * 60 * 60 * 1000);
+        
+        // 교사 정보에 만료 시간 추가
+        const teacherInfoWithExpiry = {
+          ...data.teacher,
+          expiresAt
+        };
+        
         // 세션 스토리지 대신 로컬 스토리지 사용 (페이지 새로고침 시에도 유지)
-        localStorage.setItem('teacherInfo', JSON.stringify(data.teacher));
+        localStorage.setItem('teacherInfo', JSON.stringify(teacherInfoWithExpiry));
         
         // 디버깅 정보 (개발 목적)
-        console.log('로그인 정보 저장 성공:', data.teacher);
+        console.log('로그인 정보 저장 성공:', teacherInfoWithExpiry);
         
         // 리디렉션
         router.push('/teacher/dashboard');
