@@ -17,6 +17,16 @@ export default function StudentManagement() {
   const [isFormValid, setIsFormValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  
+  // 일괄 생성 관련 상태
+  const [showBulkModal, setShowBulkModal] = useState(false);
+  const [bulkText, setBulkText] = useState('');
+  const [bulkResults, setBulkResults] = useState(null);
+  const [isBulkSubmitting, setIsBulkSubmitting] = useState(false);
+  const [bulkError, setBulkError] = useState('');
+  const [bulkSuccess, setBulkSuccess] = useState('');
+  const [bulkStudents, setBulkStudents] = useState([]);
+  const [csvFile, setCsvFile] = useState(null);
 
   // 인증 확인
   useEffect(() => {
@@ -175,6 +185,160 @@ export default function StudentManagement() {
     }
   };
 
+  // 일괄 생성 모달 토글
+  const toggleBulkModal = () => {
+    setShowBulkModal(!showBulkModal);
+    // 모달이 닫힐 때 상태 초기화
+    if (showBulkModal) {
+      setBulkText('');
+      setBulkResults(null);
+      setBulkError('');
+      setBulkSuccess('');
+      setBulkStudents([]);
+      setCsvFile(null);
+    }
+  };
+
+  // CSV 파일 처리
+  const handleCsvUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    setCsvFile(file);
+    setBulkError('');
+    
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const csvText = event.target.result;
+        setBulkText(csvText);
+        parseStudentData(csvText);
+      } catch (err) {
+        setBulkError('파일을 읽는 도중 오류가 발생했습니다.');
+        console.error('CSV 파일 읽기 오류:', err);
+      }
+    };
+    
+    reader.onerror = () => {
+      setBulkError('파일을 읽는 도중 오류가 발생했습니다.');
+    };
+    
+    reader.readAsText(file);
+  };
+
+  // 학생 데이터 파싱
+  const parseStudentData = (text) => {
+    try {
+      // 빈 줄 제거 및 줄 단위로 분리
+      const lines = text.split('\n').filter(line => line.trim() !== '');
+      
+      if (lines.length === 0) {
+        setBulkError('파일에 유효한 데이터가 없습니다.');
+        setBulkStudents([]);
+        return;
+      }
+      
+      const parsedStudents = [];
+      
+      // 각 줄 처리
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        // 쉼표 또는 탭으로 구분된 데이터 처리
+        const parts = line.includes(',') ? line.split(',') : line.split('\t');
+        
+        // 이름, 학급, 고유번호를 추출
+        if (parts.length >= 3) {
+          const name = parts[0].trim();
+          const className = parts[1].trim();
+          const accessCode = parts[2].trim();
+          
+          if (name && className && accessCode) {
+            parsedStudents.push({ name, className, accessCode });
+          }
+        }
+      }
+      
+      if (parsedStudents.length === 0) {
+        setBulkError('유효한 학생 데이터를 찾을 수 없습니다. 데이터는 "이름,학급,고유번호" 형식이어야 합니다.');
+        setBulkStudents([]);
+      } else {
+        setBulkStudents(parsedStudents);
+        setBulkError('');
+      }
+    } catch (err) {
+      setBulkError('데이터 파싱 중 오류가 발생했습니다.');
+      console.error('데이터 파싱 오류:', err);
+      setBulkStudents([]);
+    }
+  };
+
+  // 수동으로 입력한 텍스트 변경 처리
+  const handleBulkTextChange = (e) => {
+    const text = e.target.value;
+    setBulkText(text);
+    if (text.trim()) {
+      parseStudentData(text);
+    } else {
+      setBulkStudents([]);
+    }
+  };
+
+  // 일괄 생성 처리
+  const handleBulkCreate = async () => {
+    if (bulkStudents.length === 0 || isBulkSubmitting) return;
+    
+    try {
+      setIsBulkSubmitting(true);
+      setBulkError('');
+      setBulkSuccess('');
+      setBulkResults(null);
+      
+      // 로컬 스토리지에서 교사 정보 가져오기
+      const teacherInfoStr = localStorage.getItem('teacherInfo');
+      let teacherId = 'teacher'; // 기본값
+      
+      if (teacherInfoStr) {
+        try {
+          const teacherInfo = JSON.parse(teacherInfoStr);
+          teacherId = teacherInfo.id || 'teacher';
+        } catch (e) {
+          console.error('교사 정보 파싱 오류:', e);
+        }
+      }
+      
+      const response = await fetch('/api/students/bulk', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          students: bulkStudents,
+          createdBy: teacherId
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || '일괄 생성에 실패했습니다.');
+      }
+      
+      setBulkResults(data.data);
+      setBulkSuccess(data.message);
+      
+      // 성공 시 학생 목록 새로고침
+      if (data.data.success.length > 0) {
+        fetchStudents();
+      }
+      
+    } catch (err) {
+      console.error('일괄 생성 오류:', err);
+      setBulkError(err.message || '오류가 발생했습니다.');
+    } finally {
+      setIsBulkSubmitting(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -194,7 +358,14 @@ export default function StudentManagement() {
           {/* 학생 계정 생성 폼 */}
           <div className={styles.formCard}>
             <div className={styles.cardHeader}>
-              <h2 className={styles.cardTitle}>새 학생 계정 생성</h2>
+              <h2 className={styles.cardTitle}>학생 계정 생성</h2>
+              <button 
+                type="button"
+                onClick={toggleBulkModal}
+                className={styles.bulkButton}
+              >
+                일괄 생성
+              </button>
             </div>
             <div className={styles.cardBody}>
               {successMessage && (
@@ -324,6 +495,148 @@ export default function StudentManagement() {
             </div>
           </div>
         </div>
+        
+        {/* 일괄 생성 모달 */}
+        {showBulkModal && (
+          <div className={styles.modalOverlay}>
+            <div className={styles.modalContent}>
+              <div className={styles.modalHeader}>
+                <h2>학생 계정 일괄 생성</h2>
+                <button 
+                  type="button"
+                  onClick={toggleBulkModal}
+                  className={styles.closeButton}
+                >
+                  ×
+                </button>
+              </div>
+              <div className={styles.modalBody}>
+                {bulkSuccess && (
+                  <div className={styles.successMessage}>
+                    <p>{bulkSuccess}</p>
+                  </div>
+                )}
+                
+                {bulkError && (
+                  <div className={styles.errorMessage}>
+                    <p>{bulkError}</p>
+                  </div>
+                )}
+                
+                <div className={styles.uploadSection}>
+                  <h3>CSV 파일 업로드</h3>
+                  <p className={styles.uploadHelp}>
+                    CSV 파일 형식: 이름,학급,고유번호 (한 줄에 한 학생)
+                  </p>
+                  <input
+                    type="file"
+                    accept=".csv,.txt"
+                    onChange={handleCsvUpload}
+                    className={styles.fileInput}
+                  />
+                  <div className={styles.divider}>또는</div>
+                  <h3>직접 입력</h3>
+                  <p className={styles.uploadHelp}>
+                    형식: 이름,학급,고유번호 (한 줄에 한 학생)
+                  </p>
+                  <textarea
+                    value={bulkText}
+                    onChange={handleBulkTextChange}
+                    className={styles.bulkTextarea}
+                    placeholder="예시:
+홍길동,5학년 2반,1234
+김철수,5학년 2반,5678
+이영희,6학년 1반,9012"
+                    rows={10}
+                  ></textarea>
+                </div>
+                
+                {bulkStudents.length > 0 && (
+                  <div className={styles.previewSection}>
+                    <h3>미리보기 ({bulkStudents.length}명)</h3>
+                    <div className={styles.previewTable}>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>이름</th>
+                            <th>학급</th>
+                            <th>고유번호</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {bulkStudents.map((student, index) => (
+                            <tr key={index}>
+                              <td>{student.name}</td>
+                              <td>{student.className}</td>
+                              <td>{student.accessCode}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+                
+                {bulkResults && (
+                  <div className={styles.resultsSection}>
+                    <h3>생성 결과</h3>
+                    <div className={styles.resultsSummary}>
+                      <p>
+                        성공: <span className={styles.successCount}>{bulkResults.success.length}</span> 명 | 
+                        실패: <span className={styles.failedCount}>{bulkResults.failed.length}</span> 명
+                      </p>
+                    </div>
+                    
+                    {bulkResults.failed.length > 0 && (
+                      <div className={styles.failedList}>
+                        <h4>실패한 항목</h4>
+                        <div className={styles.previewTable}>
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>이름</th>
+                                <th>학급</th>
+                                <th>고유번호</th>
+                                <th>실패 사유</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {bulkResults.failed.map((item, index) => (
+                                <tr key={index}>
+                                  <td>{item.name}</td>
+                                  <td>{item.className}</td>
+                                  <td>{item.accessCode}</td>
+                                  <td>{item.reason}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className={styles.modalFooter}>
+                <button
+                  type="button"
+                  onClick={toggleBulkModal}
+                  className={styles.cancelButton}
+                >
+                  닫기
+                </button>
+                <button
+                  type="button"
+                  onClick={handleBulkCreate}
+                  disabled={bulkStudents.length === 0 || isBulkSubmitting}
+                  className={styles.confirmButton}
+                >
+                  {isBulkSubmitting ? '생성 중...' : `${bulkStudents.length}명 일괄 생성`}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
 
       <footer className={styles.footer}>
