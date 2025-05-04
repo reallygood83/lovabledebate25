@@ -97,8 +97,8 @@ export default function TeacherDashboard() {
           }
         }
         
-        // 교사 ID를 쿼리 파라미터로 추가하여 해당 교사의 의견만 가져옴
-        const response = await fetch(`/api/opinions/all?teacherId=${teacherId}`);
+        // 최근 의견 목록만 가져오기 (limit=5)
+        const response = await fetch(`/api/opinions/all?teacherId=${teacherId}&limit=5`);
         const data = await response.json();
 
         if (!response.ok) {
@@ -107,20 +107,38 @@ export default function TeacherDashboard() {
 
         setOpinions(data.data || []);
         
-        // 통계 계산
-        const total = data.data?.length || 0;
-        const pending = data.data?.filter(item => item.status === 'pending').length || 0;
-        const reviewed = data.data?.filter(item => item.status === 'reviewed').length || 0;
-        
-        setStats({
-          total,
-          pending,
-          reviewed
-        });
+        // 의견 통계 가져오기
+        await fetchStats(teacherId);
       } catch (err) {
         setError(err.message || '오류가 발생했습니다.');
       } finally {
         setIsLoading(false);
+      }
+    };
+
+    // 의견 통계 가져오기 함수
+    const fetchStats = async (teacherId) => {
+      try {
+        // 전체 의견 수 가져오기
+        const totalResponse = await fetch(`/api/opinions/all?teacherId=${teacherId}&limit=1`);
+        const totalData = await totalResponse.json();
+        
+        // 검토 대기 중인 의견 수 가져오기
+        const pendingResponse = await fetch(`/api/opinions/all?teacherId=${teacherId}&status=pending&limit=1`);
+        const pendingData = await pendingResponse.json();
+        
+        // 검토 완료된 의견 수 가져오기
+        const reviewedResponse = await fetch(`/api/opinions/all?teacherId=${teacherId}&status=reviewed&limit=1`);
+        const reviewedData = await reviewedResponse.json();
+        
+        // 각 API 응답에서 pagination.total 값을 사용하여 총 개수 가져오기
+        setStats({
+          total: totalData.pagination?.total || 0,
+          pending: pendingData.pagination?.total || 0,
+          reviewed: reviewedData.pagination?.total || 0
+        });
+      } catch (err) {
+        console.error('의견 통계 가져오기 오류:', err);
       }
     };
 
