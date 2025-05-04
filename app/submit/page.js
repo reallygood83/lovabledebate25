@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import styles from './page.module.css';
-import { FaLightbulb, FaMagic, FaUser, FaSchool } from 'react-icons/fa';
+import { FaLightbulb, FaUser, FaSchool } from 'react-icons/fa';
 
 // 자동 완성용 토론 주제 목록
 const SUGGESTED_TOPICS = [
@@ -259,43 +259,6 @@ export default function SubmitOpinion() {
     }
   };
 
-  // AI 도우미 생성 함수
-  const generateAIHelp = async () => {
-    if (!formData.topic.trim()) {
-      setError('AI 도우미를 사용하려면 먼저 토론 주제를 입력해주세요.');
-      return;
-    }
-    
-    setIsLoading(true);
-    try {
-      const response = await fetch('/api/generate-help', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          topic: formData.topic
-        }),
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'AI 도우미 생성에 실패했습니다.');
-      }
-      
-      setFormData(prev => ({
-        ...prev,
-        content: data.content
-      }));
-      
-    } catch (err) {
-      setError(err.message || 'AI 도우미 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -380,14 +343,6 @@ export default function SubmitOpinion() {
                     onClick={() => setIsWritingTipsVisible(!isWritingTipsVisible)}
                   >
                     <FaLightbulb /> 작성 팁
-                  </button>
-                  <button
-                    type="button"
-                    className={styles.aiButton}
-                    onClick={generateAIHelp}
-                    disabled={isLoading || !formData.topic.trim()}
-                  >
-                    <FaMagic /> AI 작성 도우미
                   </button>
                 </div>
               </div>
