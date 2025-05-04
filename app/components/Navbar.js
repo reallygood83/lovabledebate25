@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
@@ -13,6 +14,32 @@ export default function Navbar() {
   if (pathname === '/' || pathname === '/teacher/login') {
     return null;
   }
+
+  // 교사 로그인 세션 갱신
+  useEffect(() => {
+    if (isTeacherRoute) {
+      try {
+        const teacherInfo = localStorage.getItem('teacherInfo');
+        if (teacherInfo) {
+          const teacherData = JSON.parse(teacherInfo);
+          
+          // 만료 시간 확인 및 갱신
+          if (teacherData && teacherData.id) {
+            // 만료 시간을 7일로 연장
+            const newExpiresAt = Date.now() + (7 * 24 * 60 * 60 * 1000);
+            const updatedTeacherData = {
+              ...teacherData,
+              expiresAt: newExpiresAt
+            };
+            localStorage.setItem('teacherInfo', JSON.stringify(updatedTeacherData));
+            console.log('네비게이션 바에서 교사 로그인 세션 갱신됨:', new Date(newExpiresAt));
+          }
+        }
+      } catch (error) {
+        console.error('교사 세션 갱신 오류:', error);
+      }
+    }
+  }, [isTeacherRoute, pathname]);
 
   return (
     <header className={styles.header}>
