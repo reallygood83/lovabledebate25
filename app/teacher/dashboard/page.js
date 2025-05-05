@@ -337,7 +337,15 @@ export default function TeacherDashboard() {
       </main>
 
       <footer className={styles.footer}>
-        <p>경기초등토론교육모형 AI 피드백 시스템 &copy; {new Date().getFullYear()}</p>
+        <div className={styles.footerContainer}>
+          <div className={styles.footerContent}>
+            <div className={styles.footerLogo}>
+              <span style={{ fontSize: '1.5rem', marginRight: '0.5rem' }}>❤️</span>
+              <span>LovableDebate</span>
+            </div>
+            <p>AI 기반 토론 교육 피드백 시스템 &copy; 2025 안양 박달초 김문정</p>
+          </div>
+        </div>
       </footer>
     </div>
   );
