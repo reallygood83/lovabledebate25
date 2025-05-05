@@ -61,7 +61,7 @@ export default function Navbar() {
     <header className={styles.header}>
       <div className={styles.container}>
         <h1 className={styles.title}>
-          <Link href="/">LovableDebate</Link>
+          <Link href="/">❤️ LovableDebate</Link>
         </h1>
         <nav className={styles.nav}>
           <ul>

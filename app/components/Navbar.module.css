@@ -1,5 +1,5 @@
 .header {
-  background-color: #1e40af;
+  background-color: #222;
   color: white;
   padding: 0.75rem 0;
   width: 100%;
@@ -70,7 +70,7 @@
   position: absolute;
   top: 100%;
   left: 0;
-  background-color: #1e40af;
+  background-color: #222;
   min-width: 150px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   border-radius: 0 0 4px 4px;
@@ -86,5 +86,5 @@
 }
 
 .dropdown a:hover {
-  background-color: #2563eb;
+  background-color: #333;
 } 

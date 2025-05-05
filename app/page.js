@@ -150,16 +150,6 @@ export default function Home() {
 
   return (
     <div className={styles.mainContainer}>
-      <header className={styles.mainHeader}>
-        <h1 className={styles.mainTitle}>LovableDebate</h1>
-        <nav className={styles.mainNav}>
-          <ul>
-            <li><a href="https://lovabledebate25.vercel.app/" className={styles.active}>홈</a></li>
-            <li><a href="https://debate25.vercel.app/" target="_blank" rel="noopener noreferrer">토론 수업 지원 도구 이동</a></li>
-          </ul>
-        </nav>
-      </header>
-
       <main className={styles.mainContent}>
         <div className={styles.heroSection}>
           <h1 className={styles.heroTitle}>AI 기반 토론 교육 피드백 시스템</h1>
