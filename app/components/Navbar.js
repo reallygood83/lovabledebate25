@@ -1,19 +1,35 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
   
   // 현재 경로가 /teacher로 시작하는지 확인
   const isTeacherRoute = pathname.startsWith('/teacher');
   
-  // 로그인 페이지나 메인 페이지에서는 네비게이션 바를 표시하지 않음
-  if (pathname === '/' || pathname === '/teacher/login') {
+  // 로그인 페이지에서는 네비게이션 바를 표시하지 않음
+  if (pathname === '/teacher/login') {
     return null;
   }
+
+  // 드롭다운 외부 클릭 감지
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    }
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // 교사 로그인 세션 갱신
   useEffect(() => {
@@ -45,34 +61,78 @@ export default function Navbar() {
     <header className={styles.header}>
       <div className={styles.container}>
         <h1 className={styles.title}>
-          <Link href="/">토론 튜터</Link>
+          <Link href="/">LovableDebate</Link>
         </h1>
         <nav className={styles.nav}>
           <ul>
             <li>
-              <Link href="/" className={pathname === '/' ? styles.active : ''}>
+              <a 
+                href="https://debate25.vercel.app/" 
+                className={pathname === '/' ? styles.active : ''}
+              >
                 홈
-              </Link>
+              </a>
             </li>
             <li>
               <a 
-                href="https://debate25.vercel.app/" 
-                target="_blank" 
-                rel="noopener noreferrer"
+                href="https://debate25.vercel.app/topics/ai-topics" 
+                className={pathname.includes('/topics') ? styles.active : ''}
               >
-                토론 수업 지원 도구 이동
+                토론 주제 탐색
               </a>
             </li>
-            {isTeacherRoute && (
-              <li>
-                <Link 
-                  href="/teacher/dashboard" 
-                  className={pathname === '/teacher/dashboard' ? styles.active : ''}
-                >
-                  교사 대시보드
-                </Link>
-              </li>
-            )}
+            <li>
+              <a 
+                href="https://debate25.vercel.app/scenarios" 
+                className={pathname.includes('/scenarios') ? styles.active : ''}
+              >
+                토론 시나리오
+              </a>
+            </li>
+            <li>
+              <a 
+                href="https://debate25.vercel.app/session" 
+                className={pathname.includes('/session') ? styles.active : ''}
+              >
+                토론 진행하기
+              </a>
+            </li>
+            <li 
+              className={styles.dropdownContainer}
+              onMouseEnter={() => setShowDropdown(true)}
+              onMouseLeave={() => setShowDropdown(false)}
+              ref={dropdownRef}
+            >
+              <a 
+                href="https://lovabledebate25.vercel.app/" 
+                className={pathname === '/' ? styles.active : ''}
+              >
+                학습 피드백
+              </a>
+              {showDropdown && (
+                <div className={styles.dropdown}>
+                  <a href="https://lovabledebate25.vercel.app/teacher/dashboard">
+                    교사 대시보드
+                  </a>
+                </div>
+              )}
+            </li>
+            <li>
+              <a 
+                href="https://debate25.vercel.app/resources" 
+                className={pathname.includes('/resources') ? styles.active : ''}
+              >
+                교육 자료실
+              </a>
+            </li>
+            <li>
+              <a 
+                href="https://debate25.vercel.app/about" 
+                className={pathname.includes('/about') ? styles.active : ''}
+              >
+                소개
+              </a>
+            </li>
           </ul>
         </nav>
       </div>
