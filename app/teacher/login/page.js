@@ -1,14 +1,11 @@
 'use client';
-import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import styles from './page.module.css';
 
-// SearchParams를 사용하는 컴포넌트를 분리합니다
-function LoginContent() {
+export default function TeacherLogin() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -16,32 +13,35 @@ function LoginContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // URL 파라미터와 로컬 스토리지에서 데이터 가져오기
+  // 컴포넌트 마운트 후 로컬 스토리지 및 URL 파라미터 확인
   useEffect(() => {
-    // URL에서 에러 파라미터 확인
-    const errorParam = searchParams.get('error');
-    if (errorParam) {
-      let errorMessage = '로그인 처리 중 오류가 발생했습니다.';
+    // 클라이언트 사이드에서만 실행
+    if (typeof window !== 'undefined') {
+      // URL 파라미터 확인
+      const urlParams = new URLSearchParams(window.location.search);
+      const errorParam = urlParams.get('error');
       
-      switch(errorParam) {
-        case 'invalid_state':
-          errorMessage = '보안 검증에 실패했습니다. 다시 시도해주세요.';
-          break;
-        case 'token_error':
-          errorMessage = '인증 토큰을 가져오는데 실패했습니다.';
-          break;
-        case 'profile_error':
-          errorMessage = '프로필 정보를 가져오는데 실패했습니다.';
-          break;
-        default:
-          errorMessage = `오류: ${errorParam}`;
+      if (errorParam) {
+        let errorMessage = '로그인 처리 중 오류가 발생했습니다.';
+        
+        switch(errorParam) {
+          case 'invalid_state':
+            errorMessage = '보안 검증에 실패했습니다. 다시 시도해주세요.';
+            break;
+          case 'token_error':
+            errorMessage = '인증 토큰을 가져오는데 실패했습니다.';
+            break;
+          case 'profile_error':
+            errorMessage = '프로필 정보를 가져오는데 실패했습니다.';
+            break;
+          default:
+            errorMessage = `오류: ${errorParam}`;
+        }
+        
+        setError(errorMessage);
       }
       
-      setError(errorMessage);
-    }
-    
-    // 클라이언트 사이드에서만 localStorage 접근 (hydration 에러 방지)
-    if (typeof window !== 'undefined') {
+      // 회원가입에서 넘어온 경우 이메일 자동 입력
       const lastRegisteredEmail = localStorage.getItem('lastRegisteredEmail');
       if (lastRegisteredEmail) {
         setFormData(prev => ({
@@ -52,7 +52,7 @@ function LoginContent() {
         localStorage.removeItem('lastRegisteredEmail');
       }
     }
-  }, [searchParams]);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -203,14 +203,5 @@ function LoginContent() {
         <p>경기초등토론교육모형 AI 피드백 시스템 &copy; {new Date().getFullYear()}</p>
       </footer>
     </div>
-  );
-}
-
-// 메인 페이지 컴포넌트에서는 Suspense로 감싸서 내보냅니다
-export default function TeacherLogin() {
-  return (
-    <Suspense fallback={<div>로딩 중...</div>}>
-      <LoginContent />
-    </Suspense>
   );
 } 

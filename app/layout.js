@@ -1,6 +1,12 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import Navbar from "./components/Navbar";
+import dynamic from "next/dynamic";
 import "./globals.css";
+
+// Navbar를 dynamic import로 로드하여 hydration 문제 방지
+const Navbar = dynamic(() => import("./components/Navbar"), {
+  ssr: false,
+  loading: () => null
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

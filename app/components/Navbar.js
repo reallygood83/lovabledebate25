@@ -31,9 +31,9 @@ export default function Navbar() {
     };
   }, []);
 
-  // 교사 로그인 세션 갱신
+  // 교사 로그인 세션 갱신 (클라이언트 사이드에서만)
   useEffect(() => {
-    if (isTeacherRoute) {
+    if (isTeacherRoute && typeof window !== 'undefined') {
       try {
         const teacherInfo = localStorage.getItem('teacherInfo');
         if (teacherInfo) {
