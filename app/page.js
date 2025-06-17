@@ -73,10 +73,12 @@ export default function Home() {
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          // 로그인 성공 시 로컬 스토리지에 학생 정보 저장
-          localStorage.setItem('studentAuth', 'true');
-          localStorage.setItem('studentName', loginData.studentName);
-          localStorage.setItem('studentId', data.studentId);
+          // 클라이언트 사이드에서만 localStorage 접근
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('studentAuth', 'true');
+            localStorage.setItem('studentName', loginData.studentName);
+            localStorage.setItem('studentId', data.studentId);
+          }
           
           // 학생 피드백 페이지로 이동
           window.location.href = '/student/feedback';
@@ -107,8 +109,10 @@ export default function Home() {
     // 임시 인증 - 실제로는 API 호출 필요
     // 임시 계정: teacher / password123
     if (teacherData.username === 'teacher' && teacherData.password === 'password123') {
-      // 세션 정보 저장
-      localStorage.setItem('teacherAuth', 'true');
+      // 클라이언트 사이드에서만 localStorage 접근
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('teacherAuth', 'true');
+      }
       router.push('/teacher/dashboard');
     } else {
       setError('아이디 또는 비밀번호가 올바르지 않습니다.');
@@ -118,32 +122,37 @@ export default function Home() {
 
   // 교사로 접속하기 핸들러 함수
   const handleTeacherAccess = () => {
-    // 로컬 스토리지에서 교사 정보 확인
-    try {
-      const teacherInfo = localStorage.getItem('teacherInfo');
-      
-      if (teacherInfo) {
-        // 교사 정보가 있으면 JSON 파싱
-        const teacherData = JSON.parse(teacherInfo);
+    // 클라이언트 사이드에서만 localStorage 접근 (hydration 에러 방지)
+    if (typeof window !== 'undefined') {
+      try {
+        const teacherInfo = localStorage.getItem('teacherInfo');
         
-        // 유효한 정보인지 및 만료되지 않았는지 확인
-        if (teacherData && teacherData.id) {
-          const expiresAt = teacherData.expiresAt;
+        if (teacherInfo) {
+          // 교사 정보가 있으면 JSON 파싱
+          const teacherData = JSON.parse(teacherInfo);
           
-          // 만료 시간 확인
-          if (!expiresAt || Date.now() < expiresAt) {
-            // 유효한 세션이면 바로 대시보드로 이동
-            console.log('유효한 교사 세션이 있어 대시보드로 이동합니다.');
-            router.push('/teacher/dashboard');
-            return;
+          // 유효한 정보인지 및 만료되지 않았는지 확인
+          if (teacherData && teacherData.id) {
+            const expiresAt = teacherData.expiresAt;
+            
+            // 만료 시간 확인
+            if (!expiresAt || Date.now() < expiresAt) {
+              // 유효한 세션이면 바로 대시보드로 이동
+              console.log('유효한 교사 세션이 있어 대시보드로 이동합니다.');
+              router.push('/teacher/dashboard');
+              return;
+            }
           }
         }
+        
+        // 유효한 세션이 없으면 로그인 페이지로 이동
+        router.push('/teacher/login');
+      } catch (error) {
+        console.error('교사 세션 확인 오류:', error);
+        router.push('/teacher/login');
       }
-      
-      // 유효한 세션이 없으면 로그인 페이지로 이동
-      router.push('/teacher/login');
-    } catch (error) {
-      console.error('교사 세션 확인 오류:', error);
+    } else {
+      // 서버 사이드에서는 로그인 페이지로 이동
       router.push('/teacher/login');
     }
   };

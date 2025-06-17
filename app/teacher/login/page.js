@@ -40,15 +40,17 @@ function LoginContent() {
       setError(errorMessage);
     }
     
-    // 회원가입에서 넘어온 경우 이메일 자동 입력
-    const lastRegisteredEmail = localStorage.getItem('lastRegisteredEmail');
-    if (lastRegisteredEmail) {
-      setFormData(prev => ({
-        ...prev,
-        email: lastRegisteredEmail
-      }));
-      // 사용 후 삭제
-      localStorage.removeItem('lastRegisteredEmail');
+    // 클라이언트 사이드에서만 localStorage 접근 (hydration 에러 방지)
+    if (typeof window !== 'undefined') {
+      const lastRegisteredEmail = localStorage.getItem('lastRegisteredEmail');
+      if (lastRegisteredEmail) {
+        setFormData(prev => ({
+          ...prev,
+          email: lastRegisteredEmail
+        }));
+        // 사용 후 삭제
+        localStorage.removeItem('lastRegisteredEmail');
+      }
     }
   }, [searchParams]);
 
@@ -106,8 +108,10 @@ function LoginContent() {
           expiresAt
         };
         
-        // 세션 스토리지 대신 로컬 스토리지 사용 (페이지 새로고침 시에도 유지)
-        localStorage.setItem('teacherInfo', JSON.stringify(teacherInfoWithExpiry));
+        // 클라이언트 사이드에서만 localStorage 접근
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('teacherInfo', JSON.stringify(teacherInfoWithExpiry));
+        }
         
         // 디버깅 정보 (개발 목적)
         console.log('로그인 정보 저장 성공:', teacherInfoWithExpiry);
@@ -126,11 +130,6 @@ function LoginContent() {
     }
   };
 
-  const handleNaverLogin = () => {
-    console.log('네이버 로그인 시도...');
-    // 네이버 로그인 API 경로로 리다이렉트
-    window.location.href = '/api/auth/naver';
-  };
 
   return (
     <div className={styles.container}>
@@ -185,14 +184,6 @@ function LoginContent() {
                 disabled={isLoading}
               >
                 {isLoading ? '로그인 중...' : '로그인'}
-              </button>
-              
-              <button 
-                type="button" 
-                onClick={handleNaverLogin}
-                className={styles.naverButton}
-              >
-                네이버 아이디로 로그인
               </button>
               
               <div className={styles.linkContainer}>
