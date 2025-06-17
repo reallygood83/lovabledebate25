@@ -22,6 +22,26 @@ const nextConfig = {
   // 빌드 최적화 설정
   output: 'standalone',
   
+  // CSS 최적화 및 preload 설정
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  
+  // 헤더 설정으로 preload 경고 해결
+  async headers() {
+    return [
+      {
+        source: '/_next/static/css/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
+  
   // 환경 변수 설정
   // 참고: 아래 환경 변수들은 개발 환경에서만 사용하고
   // 프로덕션 환경에서는 Vercel 대시보드에서 설정해야 합니다.
