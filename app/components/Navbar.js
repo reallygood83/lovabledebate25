@@ -7,16 +7,17 @@ import styles from './Navbar.module.css';
 export default function Navbar() {
   const pathname = usePathname();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const dropdownRef = useRef(null);
+
+  // 클라이언트 사이드에서만 실행되도록 보장
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   
   // 현재 경로가 /teacher로 시작하는지 확인
   const isTeacherRoute = pathname.startsWith('/teacher');
   
-  // 로그인 페이지에서는 네비게이션 바를 표시하지 않음
-  if (pathname === '/teacher/login') {
-    return null;
-  }
-
   // 드롭다운 외부 클릭 감지
   useEffect(() => {
     function handleClickOutside(event) {
@@ -25,15 +26,20 @@ export default function Navbar() {
       }
     }
     
-    document.addEventListener("mousedown", handleClickOutside);
+    if (isClient) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      if (isClient) {
+        document.removeEventListener("mousedown", handleClickOutside);
+      }
     };
-  }, []);
+  }, [isClient]);
 
   // 교사 로그인 세션 갱신 (클라이언트 사이드에서만)
   useEffect(() => {
-    if (isTeacherRoute && typeof window !== 'undefined') {
+    if (isClient && isTeacherRoute) {
       try {
         const teacherInfo = localStorage.getItem('teacherInfo');
         if (teacherInfo) {
@@ -55,7 +61,12 @@ export default function Navbar() {
         console.error('교사 세션 갱신 오류:', error);
       }
     }
-  }, [isTeacherRoute, pathname]);
+  }, [isClient, isTeacherRoute, pathname]);
+
+  // 로그인 페이지에서는 네비게이션 바를 표시하지 않음
+  if (pathname === '/teacher/login') {
+    return null;
+  }
 
   return (
     <header className={styles.header}>
